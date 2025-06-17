@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import Login from './Login';
 import Register from './Register';
 import AdminDashboard from './AdminDashboard';
@@ -18,7 +18,7 @@ function App() {
           </div>
         ) : (
           <div>
-            <ClientDashboard />
+            <ClientDashboard user={user}/>
           </div>
         )}
         <button onClick={() => setUser(null)}>Logout</button>

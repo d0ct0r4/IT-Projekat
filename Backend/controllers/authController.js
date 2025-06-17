@@ -1,4 +1,5 @@
 const db = require('../db');
+const { link, use } = require('../routes/auto');
 
 const loginUser = (req, res) => {
   const { username, password } = req.body;
@@ -16,7 +17,8 @@ const loginUser = (req, res) => {
       user: {
         id: user.ID,
         username: user.username,
-        role: user.role
+        role: user.role,
+        linked_id: user.linked_id
       }
     });
   });
