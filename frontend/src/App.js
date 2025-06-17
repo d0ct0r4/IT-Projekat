@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Login from './Login';
 import Register from './Register';
+import AdminDashboard from './AdminDashboard';
+import ClientDashboard from './ClientDashboard';
 
 function App() {
   const [user, setUser] = useState(null); 
@@ -10,14 +12,13 @@ function App() {
     // Ulogovan korisnik
     return (
       <div style={{ padding: 20 }}>
-        <h2>Welcome, {user.username}</h2>
         {user.role === 'admin' ? (
           <div>
-            <h3>Admin Dashboard (placeholder)</h3>
+            <AdminDashboard />
           </div>
         ) : (
           <div>
-            <h3>Client Dashboard (placeholder)</h3>
+            <ClientDashboard />
           </div>
         )}
         <button onClick={() => setUser(null)}>Logout</button>
