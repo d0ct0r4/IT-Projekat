@@ -1,5 +1,4 @@
 const db = require('../db');
-const { link, use } = require('../routes/auto');
 
 const loginUser = (req, res) => {
   const { username, password } = req.body;
