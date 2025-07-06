@@ -4,7 +4,7 @@ const { getAllAuto, getCarsByClient, deleteCarsByVIN, insertAuto } = require('..
 
 router.get('/', getAllAuto);
 router.get('/client/:id', getCarsByClient);
-router.get('/delete/:id', deleteCarsByVIN);
+router.delete('/delete/:vin', deleteCarsByVIN);
 router.post('/insert', insertAuto);
 
 module.exports = router;

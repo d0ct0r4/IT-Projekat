@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 const ZahtjeviTable = ({ user }) => {
   const [zahtjevi, setZahtjevi] = useState([]);
+  const [vin, setVin] = useState('');
 
   useEffect(() => {
     if (user?.linked_id) {
@@ -14,6 +15,31 @@ const ZahtjeviTable = ({ user }) => {
         });
     }
   }, [user]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const today = new Date();
+
+    fetch('http://localhost:8081/zahtjevi/insert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        musterija_ID : user?.linked_id,
+        Vin: vin,
+        poslaniDatum: today.toISOString()
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert('Auto uspješno dodat!');
+        setVin('');
+      })
+      .catch((err) => {
+        console.error('Greška:', err);
+        alert('Greška pri dodavanju vozila');
+      });
+  };
 
   return (
     <div>
@@ -40,6 +66,10 @@ const ZahtjeviTable = ({ user }) => {
       ) : (
         <p>Nemate zahtjeve.</p>
       )}
+      <form onSubmit={handleSubmit}>
+        <input placeholder='VIN' value={vin} onChange={(e) => setVin(e.target.value)} required/>
+        <button type='submit'>Posalji zahtjev</button>
+      </form>
     </div>
   );
 };

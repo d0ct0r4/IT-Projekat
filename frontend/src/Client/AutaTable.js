@@ -38,11 +38,6 @@ const AutaTable = ({ user }) => {
       .then((res) => res.json())
       .then((data) => {
         alert('Auto uspješno dodat!');
-        setVin('');
-        setMarka('');
-        setModel('');
-        setGodiste('');
-        setRegistracija('');
       })
       .catch((err) => {
         console.error('Greška:', err);
@@ -50,6 +45,26 @@ const AutaTable = ({ user }) => {
       });
   };
 
+  const handleDelete = (vin) => {
+    if (!window.confirm('Da li ste sigurni da želite obrisati vozilo?')) return;
+  
+    fetch(`http://localhost:8081/auto/delete/${vin}`, {
+      method: 'DELETE',
+    })
+      .then((res) => {
+        if (res.ok) {
+          setAuta((prev) => prev.filter((auto) => auto.VIN !== vin));
+          alert('Vozilo obrisano!');
+        } else {
+          throw new Error('Brisanje nije uspjelo');
+        }
+      })
+      .catch((err) => {
+        console.error('Greška pri brisanju vozila:', err);
+        alert('Greška pri brisanju vozila');
+      });
+  };
+  
 
   return (
     <div>
@@ -73,7 +88,7 @@ const AutaTable = ({ user }) => {
                     <td key={i}>{val}</td>
                 ))}
                 <td>
-                    <button>Delete</button>
+                  <button onClick={() => handleDelete(auto.VIN)}>Delete</button>
                 </td>
                 </tr>
             ))}
