@@ -14,7 +14,7 @@ function App() {
       <div style={{ padding: 20 }}>
         {user.role === 'admin' ? (
           <div>
-            <AdminDashboard />
+            <AdminDashboard user={user}/>
           </div>
         ) : (
           <div>

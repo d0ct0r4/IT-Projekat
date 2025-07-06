@@ -1,68 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { use, useState } from 'react';
+import AutomehanicarTable from './Admin/AutomehanicarTable';
+import AutaTable from './Admin/AutaTable';
+import MusterijaTable from './Admin/MusterijaTable';
 
-const TableViewer = () => {
-  const [selectedTable, setSelectedTable] = useState('auto');
-  const [data, setData] = useState([]);
+const AdminDashboard = ({ user }) => {
+  const [selectedTable, setSelectedTable] = useState('auta');
 
-  const tables = [
-    'auto',
-    'automehanicar',
-    'elektricar',
-    'firma',
-    'musterija',
-    'nabavka',
-    'popravka',
-    'racun',
-    'radnici',
-    'dijelovi'
-  ];
+  console.log(user);
 
-  useEffect(() => {
-    fetch(`http://localhost:8081/${selectedTable}`)
-      .then(res => res.json())
-      .then(json => setData(json))
-      .catch(err => {
-        console.error('Greška pri dohvaćanju podataka:', err);
-        setData([]);
-      });
-  }, [selectedTable]);
-
+  const renderTable = () => {
+    switch (selectedTable) {
+      case 'auta':
+        return <AutaTable/>;
+      case 'musterija':
+        return <MusterijaTable user={user}/>
+      default:
+        return <p>Izaberite tabelu.</p>;
+    }
+  };
   return (
     <div>
-      <h2>Pregled Tabela</h2>
-      <select onChange={(e) => setSelectedTable(e.target.value)} value={selectedTable}>
-        {tables.map((table) => (
-          <option key={table} value={table}>{table}</option>
-        ))}
+      <h2>Pregled podataka</h2>
+
+      <select value={selectedTable} onChange={(e) => setSelectedTable(e.target.value)}>
+        <option value="auta">Vozila</option>
+        <option value="musterija">Musterija</option>
+        <option value="radnici">Radnici</option>
+        <option value="automehanicar">Automehanicari</option>
+        <option value="elektricar">Elektricari</option>
+        <option value="dijelovi">Dijelovi</option>
+        <option value="nabavka">Nabavke</option>
+        <option value="popravke">Popravke</option>
+        <option value="zahtjevi">Zahtjevi</option>
       </select>
 
-      <div style={{ marginTop: 20 }}>
-        
-        {data.length > 0 ? (
-          <table>
-          <thead>
-            <tr>
-              {Object.keys(data[0]).map((col) => (
-                <th key={col}>{col}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, idx) => (
-              <tr key={idx}>
-                {Object.values(row).map((val, i) => (
-                  <td key={i}>{val}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        ) : (
-          <p>Nema podataka ili greška u konekciji.</p>
-        )}
+      <div style={{ marginTop: '20px' }}>
+        {renderTable()}
       </div>
     </div>
   );
 };
 
-export default TableViewer;
+export default AdminDashboard;

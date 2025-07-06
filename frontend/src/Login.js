@@ -16,7 +16,7 @@ function Login({ onLogin }) {
       const data = await res.json();
       if (res.ok) {
         setMsg('Login successful!');
-        onLogin(data.user); // Prosledi korisnika App.js da zna ko je ulogovan
+        onLogin(data.user);
       } else {
         setMsg(data.message || 'Login failed');
       }
