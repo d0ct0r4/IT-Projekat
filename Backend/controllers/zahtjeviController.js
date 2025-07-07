@@ -35,16 +35,27 @@ exports.insertZahtjev = (req, res) => {
   });
 };
 
-  exports.preuzetZahtjev = (req, res) => {
-    const {id, radnik_jmbg }= req.body;
+exports.preuzetZahtjev = (req, res) => {
+  const {id, radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id }= req.body;
 
-    const sql = 'UPDATE zahtjevi SET radnik_jmbg = ?, preuzet = 1 WHERE ID = ?';
-    db.query(sql, [radnik_jmbg, id], (err, results) => {
-      if(err){
-        console.error('Greska pi upitu:', err);
-        return res.status(500).json({error : 'Database error'});
+  const sql1 = 'UPDATE zahtjevi SET radnik_jmbg = ?, preuzet = 1 WHERE ID = ?';
+  db.query(sql1, [radnik_jmbg, id], (err1, result1) => {
+    if(err1){
+      console.error('Greska pri upitu:', err1);
+      return res.status(500).json({error : 'Database error'});
+    }
+
+    const sql2 = 'INSERT INTO popravka(JMBG_Radnik, Auto_VIN, Naziv, Pocetak_Datum, musterija_id) VALUES(?, ?, ?, ?, ?)'
+    db.query(sql2, [radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id], (err2, result2) => {
+      if(err2){
+        console.error('Greska od inserta:', err2);
+        return res.status(500).json({error : 'Database error'}); 
       }
 
-      res.json(results);
+      res.json({
+        update: result1,
+        insert: result2
+      });  
     })
-  }
+  })
+}

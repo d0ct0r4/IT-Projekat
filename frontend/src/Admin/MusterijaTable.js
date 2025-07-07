@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
+import Preuzmi from "./Preuzmi";
+import Zavrsi from "./Zavrsi";
 
 const MusterijeTable = ({user}) => {
     const [musterije, setMusterije] = useState([]);
     const [zahtjevi, setZahtjevi] = useState([]);
     const [pokazi, setPokazi] = useState(null);
-
-    console.log(user);
+    const [preuzmiID, setPreuzmiID] = useState(null);
+    const [zavrsiID, setZavrsiID] = useState(null);
     
     useEffect (() => {
         fetch(`http://localhost:8081/musterija`)
@@ -38,14 +40,21 @@ const MusterijeTable = ({user}) => {
         })
     }
 
-    const handlePreuzmi = (id) => {
+    const handlePreuzmi = (id, vin, musterija_id, naziv) => {
+
+        const today = new Date();
+        const formatted = today.toISOString().split('T')[0];
 
         fetch('http://localhost:8081/zahtjevi/update', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id: id,
-            radnik_jmbg: user?.radnik_jmbg
+            radnik_jmbg: user?.radnik_jmbg,
+            Auto_VIN: vin,
+            naziv: naziv,
+            pocetak_datum: formatted,
+            musterija_id: musterija_id
           }),
         })
           .then((res) => res.json())
@@ -58,6 +67,34 @@ const MusterijeTable = ({user}) => {
             alert('Greška pri preuzimanju zahtjeva');
           });
       };
+
+    const handleZavrsi = async (sati, file, musterija_id, popravka_id, cena, zahtjev_id) => {
+        const today = new Date();
+        const formatted = today.toISOString().split('T')[0];
+
+        const formData = new FormData();
+        formData.append('musterija_id', musterija_id);
+        formData.append('popravka_id', popravka_id);
+        formData.append('datum', formatted);
+        formData.append('sati', sati);
+        formData.append('cena', cena);
+        formData.append('zahtjev_id', zahtjev_id)
+        if (file) formData.append('slika', file);
+
+        try {
+        const res = await fetch('http://localhost:8081/racun/stampaj', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await res.json();
+        alert('Završeno uspešno');
+        showZahtjevi(pokazi);
+        setZavrsiID(null);
+        } catch (err) {
+        console.error(err);
+        alert('Greška pri završavanju');
+        }
+    }
 
     return (
         <div>
@@ -105,7 +142,23 @@ const MusterijeTable = ({user}) => {
                                                             <td key={j}>{val}</td>
                                                         ))}
                                                         <td>
-                                                            {z.preuzet === 0 ? <button onClick={() => handlePreuzmi(z.ID)}>Preuzmi</button> : <></>}
+                                                        {z.preuzet === 0 ? (
+                                                            <button onClick={() => setPreuzmiID(z.ID)}>Preuzmi</button>) : 
+                                                            (z.preuzet === 1) ? (<button onClick={() => setZavrsiID(z.ID)}>Zavrsi</button>) :
+                                                            null}
+                                                        {preuzmiID === z.ID && (
+                                                            <Preuzmi onClose={() => setPreuzmiID(null)} 
+                                                            onSubmit={(data) => {
+                                                                handlePreuzmi(z.ID, z.VIN, z.musterija_ID, data.text)
+                                                            }}/>                                                        
+                                                        )}
+
+                                                        {zavrsiID === z.ID && (
+                                                            <Zavrsi onClose={() => setZavrsiID(null)}
+                                                            onSubmit={({sati, file}) => {
+                                                                handleZavrsi(sati, file, m.ID, z.popravka_ID, 10, z.ID)
+                                                            }}/>
+                                                        )}
                                                         </td>
                                                         </tr>
                                                         

@@ -2,6 +2,7 @@ import React, { use, useState } from 'react';
 import AutomehanicarTable from './Admin/AutomehanicarTable';
 import AutaTable from './Admin/AutaTable';
 import MusterijaTable from './Admin/MusterijaTable';
+import PopravkaTable from './Admin/PopravkaTable';
 
 const AdminDashboard = ({ user }) => {
   const [selectedTable, setSelectedTable] = useState('auta');
@@ -14,6 +15,8 @@ const AdminDashboard = ({ user }) => {
         return <AutaTable/>;
       case 'musterija':
         return <MusterijaTable user={user}/>
+      case 'popravke':
+        return <PopravkaTable user={user}/>
       default:
         return <p>Izaberite tabelu.</p>;
     }

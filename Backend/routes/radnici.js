@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getAllRadnici } = require('../controllers/radniciController');
+const { getAllRadnici, getSatnica } = require('../controllers/radniciController');
 
 router.get('/', getAllRadnici);
+router.get('/satnica/:jmbg', getSatnica);
 
 module.exports = router;
