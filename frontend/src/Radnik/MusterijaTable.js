@@ -103,9 +103,10 @@ const MusterijeTable = ({user}) => {
                 <table cellPadding="5" style={{borderCollapse: 'collapse'}}>
                     <thead>
                         <tr>
-                            {Object.keys(musterije[0]).map((key) => (
-                            <th key={key}>{key}</th>
-                            ))}
+                           <th>ID</th>
+                           <th>Ime</th>
+                           <th>Prezime</th>
+                           <th>Broj Telefona</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -129,9 +130,13 @@ const MusterijeTable = ({user}) => {
                                             <table cellPadding="5" style={{ marginTop: '10px', width: '100%' }}>
                                                 <thead>
                                                 <tr>
-                                                    {Object.keys(zahtjevi[0]).map((key) => (
-                                                    <th key={key}>{key}</th>
-                                                    ))}
+                                                    <th>ID</th>
+                                                    <th>Musterija ID</th>
+                                                    <th>JMBG Radnika</th>
+                                                    <th>VIN</th>
+                                                    <th>Popravka ID</th>
+                                                    <th>Datum slanja</th>
+                                                    <th>Status</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -139,7 +144,16 @@ const MusterijeTable = ({user}) => {
                                                     <React.Fragment key={z.preuzet}>
                                                         <tr key={i}>
                                                         {Object.values(z).map((val, j) => (
-                                                            <td key={j}>{val}</td>
+                                                            <td key={j}>
+                                                            {j === 6
+                                                              ? val === 0
+                                                                ? 'Nije preuzeto'
+                                                                : val === 1
+                                                                  ? 'Preuzeto'
+                                                                  : 'Zavrseno'
+                                                              : val}
+                                                          </td>
+                                                          
                                                         ))}
                                                         <td>
                                                         {z.preuzet === 0 ? (

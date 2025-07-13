@@ -3,6 +3,7 @@ import Login from './Login';
 import Register from './Register';
 import AdminDashboard from './AdminDashboard';
 import ClientDashboard from './ClientDashboard';
+import RadnikDashboard from './RadnikDashboard';
 
 function App() {
   const [user, setUser] = useState(null); 
@@ -17,9 +18,15 @@ function App() {
             <AdminDashboard user={user}/>
           </div>
         ) : (
+          user.role === 'radnik' ? (
+            <div>
+              <RadnikDashboard user={user}/>
+            </div>
+          ) : (
           <div>
             <ClientDashboard user={user}/>
           </div>
+          )
         )}
         <button onClick={() => setUser(null)}>Logout</button>
       </div>

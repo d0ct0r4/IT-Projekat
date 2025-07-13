@@ -1,22 +1,14 @@
 import React, { use, useState } from 'react';
-import AutomehanicarTable from './Admin/AutomehanicarTable';
-import AutaTable from './Admin/AutaTable';
-import MusterijaTable from './Admin/MusterijaTable';
-import PopravkaTable from './Admin/PopravkaTable';
 
 const AdminDashboard = ({ user }) => {
-  const [selectedTable, setSelectedTable] = useState('auta');
+  const [selectedTable, setSelectedTable] = useState('musterija');
 
   console.log(user);
 
   const renderTable = () => {
     switch (selectedTable) {
-      case 'auta':
-        return <AutaTable/>;
-      case 'musterija':
-        return <MusterijaTable user={user}/>
-      case 'popravke':
-        return <PopravkaTable user={user}/>
+      case 'korisnici':
+        return <p>Test</p>
       default:
         return <p>Izaberite tabelu.</p>;
     }
@@ -26,15 +18,10 @@ const AdminDashboard = ({ user }) => {
       <h2>Pregled podataka</h2>
 
       <select value={selectedTable} onChange={(e) => setSelectedTable(e.target.value)}>
-        <option value="auta">Vozila</option>
-        <option value="musterija">Musterija</option>
+        <option value="korisnici">Korisnici</option>
         <option value="radnici">Radnici</option>
         <option value="automehanicar">Automehanicari</option>
         <option value="elektricar">Elektricari</option>
-        <option value="dijelovi">Dijelovi</option>
-        <option value="nabavka">Nabavke</option>
-        <option value="popravke">Popravke</option>
-        <option value="zahtjevi">Zahtjevi</option>
       </select>
 
       <div style={{ marginTop: '20px' }}>
