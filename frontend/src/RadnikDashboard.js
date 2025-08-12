@@ -2,12 +2,12 @@ import React, { use, useState } from 'react';
 import AutaTable from './Radnik/AutaTable';
 import MusterijaTable from './Radnik/MusterijaTable';
 import PopravkaTable from './Radnik/PopravkaTable';
+import ZahtjeviTable from './Radnik/ZahtjeviTable';
+
 
 const RadnikDashboard = ({ user }) => {
   const [selectedTable, setSelectedTable] = useState('musterija');
-
-  console.log(user);
-
+  
   const renderTable = () => {
     switch (selectedTable) {
       case 'auta':
@@ -16,6 +16,8 @@ const RadnikDashboard = ({ user }) => {
         return <MusterijaTable user={user}/>
       case 'popravke':
         return <PopravkaTable user={user}/>
+      case 'zahtjevi':
+        return <ZahtjeviTable user={user}/>
       default:
         return <p>Izaberite tabelu.</p>;
     }
@@ -29,11 +31,6 @@ const RadnikDashboard = ({ user }) => {
         <option value="popravke">Popravke</option>
         <option value="zahtjevi">Zahtjevi</option>
         <option value="auta">Vozila</option>
-        <option value="radnici">Radnici</option>
-        <option value="automehanicar">Automehanicari</option>
-        <option value="elektricar">Elektricari</option>
-        <option value="dijelovi">Dijelovi</option>
-        <option value="nabavka">Nabavke</option>
       </select>
 
       <div style={{ marginTop: '20px' }}>

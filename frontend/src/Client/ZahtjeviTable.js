@@ -3,8 +3,13 @@ import React, { useEffect, useState } from 'react';
 const ZahtjeviTable = ({ user }) => {
   const [zahtjevi, setZahtjevi] = useState([]);
   const [vin, setVin] = useState('');
+  const [vinovi, setVinovi] = useState([]);
 
   useEffect(() => {
+
+    console.log('User object:', user);
+    console.log('User linked_id:', user?.linked_id);
+
     if (user?.linked_id) {
       fetch(`http://localhost:8081/zahtjevi/client/${user.linked_id}`)
         .then((res) => res.json())
@@ -13,6 +18,11 @@ const ZahtjeviTable = ({ user }) => {
           console.error('Greška pri dohvaćanju zahtjeva:', err);
           setZahtjevi([]);
         });
+
+      fetch(`http://localhost:8081/auto/vin/${user.linked_id}`)
+      .then((res) => res.json())
+      .then((data) => {setVinovi(data);     console.log("Dobijeni VIN-ovi:", data);    })
+      .catch((err) => console.error('Greška pri dohvaćanju VIN-ova:', err));
     }
   }, [user]);
 
@@ -67,7 +77,14 @@ const ZahtjeviTable = ({ user }) => {
         <p>Nemate zahtjeve.</p>
       )}
       <form onSubmit={handleSubmit}>
-        <input placeholder='VIN' value={vin} onChange={(e) => setVin(e.target.value)} required/>
+        <select value={vin} onChange={(e) => setVin(e.target.value)} required>
+          <option value="">Odaberi VIN</option>
+            {vinovi.map((item, idx) => (
+              <option key={idx} value={item.VIN}>
+                {item.VIN}
+              </option>
+            ))}
+        </select>
         <button type='submit'>Posalji zahtjev</button>
       </form>
     </div>

@@ -50,3 +50,19 @@ exports.insertAuto = (req, res) => {
       res.json(result);
     });
 };
+
+exports.getVinByVlasnik = (req, res) => {
+    const id = req.params.id;
+
+    console.log(id);
+
+    const sql = 'SELECT VIN FROM auto WHERE Vlasnik_ID = ?'
+    db.query(sql, [id], (err, result) => {
+      if(err) {
+        console.error('Greska pri unosu auta:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      res.json(result);
+    })
+}
