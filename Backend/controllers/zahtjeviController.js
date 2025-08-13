@@ -59,3 +59,17 @@ exports.preuzetZahtjev = (req, res) => {
     })
   })
 }
+
+exports.deleteZahtjev = (req, res) => {
+    const id = req.params.id;
+
+    const sql = 'DELETE FROM zahtjevi WHERE ID = ?';
+    db.query(sql, id, (err, result) => {
+      if(err){
+        console.error('Greska pri upitu:', err);
+        return res.status(500).json({error: 'Database error'});
+      }
+
+      res.json(result)
+    })
+}

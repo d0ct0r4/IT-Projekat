@@ -51,6 +51,26 @@ const ZahtjeviTable = ({ user }) => {
       });
   };
 
+  const handleDelete = (id) => {
+    if (!window.confirm("Da li ste sigurni da zelite da obrisete zahtjev?")) return;
+
+    fetch(`http://localhost:8081/zahtjevi/delete/${id}`, {
+      method: 'DELETE',
+    })
+      .then((res) => {
+        if (res.ok) {
+          setZahtjevi((prev) => prev.filter((zahtjev) => zahtjev.ID !== id));
+          alert('Zahtjev obrisan!');
+        } else {
+          throw new Error('Brisanje nije uspjelo');
+        }
+      })
+      .catch((err) => {
+        console.error('Greška pri brisanju zahtjeva:', err);
+        alert('Greška pri brisanju zahtjeva');
+      });
+  };
+
   return (
     <div>
       <h2>Moja Vozila</h2>
@@ -69,6 +89,7 @@ const ZahtjeviTable = ({ user }) => {
                 {Object.values(zahtjev).map((val, i) => (
                   <td key={i}>{val}</td>
                 ))}
+                <td><button onClick={() => handleDelete(zahtjev.ID)}>Delete</button></td>
               </tr>
             ))}
           </tbody>
