@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import DodajAuto from './DodajAuto';
 
 const AutaTable = ({ user }) => {
   const [auta, setAuta] = useState([]);
-  const [vin, setVin] = useState('');
-  const [marka, setMarka] = useState('');
-  const [model, setModel] = useState('');
-  const [godiste, setGodiste] = useState('');
-  const [registracija, setRegistracija] = useState('');
+  const [dodaj, setDodaj] = useState(null);
 
   useEffect(() => {
     if (user?.linked_id) {
@@ -20,8 +17,7 @@ const AutaTable = ({ user }) => {
     }
   }, [user]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleDodaj = (vin, registracija, marka, model, godiste) => {
 
     fetch('http://localhost:8081/auto/insert', {
       method: 'POST',
@@ -38,6 +34,10 @@ const AutaTable = ({ user }) => {
       .then((res) => res.json())
       .then((data) => {
         alert('Auto uspješno dodat!');
+        fetch(`http://localhost:8081/auto/client/${user.linked_id}`)
+        .then((res) => res.json())
+        .then((data) => setAuta(data))
+        .catch((err) => console.error(err));
       })
       .catch((err) => {
         console.error('Greška:', err);
@@ -92,23 +92,21 @@ const AutaTable = ({ user }) => {
                 </td>
                 </tr>
             ))}
-                
+              
             </tbody>
-            
+            <button onClick={() => setDodaj(1)}>Dodaj Auto</button>
+            {dodaj === 1 && (
+              <DodajAuto onClose={() => setDodaj(null)} 
+              onSubmit={(auto) => {handleDodaj(auto.vin, auto.registracija, auto.marka, auto.model, auto.godiste)
+              }}/>
+            )}
         </table>
       ) : (
         <div>
             <p>Nemate auta.</p>
         </div>
       )}
-      <form onSubmit={handleSubmit}>
-        <input placeholder="VIN" value={vin} onChange={(e) => setVin(e.target.value)} required /><br />
-        <input placeholder="Marka" value={marka} onChange={(e) => setMarka(e.target.value)} required /><br />
-        <input placeholder="Model" value={model} onChange={(e) => setModel(e.target.value)} required /><br />
-        <input placeholder="Godište" type="number" value={godiste} onChange={(e) => setGodiste(e.target.value)} required /><br />
-        <input placeholder="Registracija" value={registracija} onChange={(e) => setRegistracija(e.target.value)} required /><br />
-      <button type='submit'>Dodaj auto</button>
-      </form>
+        
     </div>
   );
 };
