@@ -2,7 +2,7 @@ const db = require('../db');
 const path = require('path');
 
 exports.getAllRacun = (req, res) => {
-    db.query("SELECT * FROM racun", (err, data) =>{
+    db.query(`SELECT ID, Musterija_ID, Popravka_ID, DATE_FORMAT(Datum, '%Y-%m-%d') as Datum, sati, Cena FROM racun`, (err, data) =>{
         if(err) return err;
         res.json(data);
     });
@@ -13,7 +13,7 @@ exports.getRacunByClient = (req, res) => {
   
     console.log(clientId);
   
-    const sql = 'SELECT * FROM racun WHERE Musterija_ID = ?';
+    const sql = `SELECT ID, Musterija_ID, Popravka_ID, DATE_FORMAT(Datum, '%Y-%m-%d') as Datum, sati, Cena FROM racun WHERE Musterija_ID = ?`;
     db.query(sql, [clientId], (err, results) => {
       if (err) {
         console.error('Greška pri upitu:', err);
