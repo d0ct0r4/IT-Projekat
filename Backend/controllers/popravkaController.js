@@ -10,9 +10,7 @@ exports.getAllPopravka = (req, res) => {
 
 exports.getPopravkaByClient = (req, res) => {
     const clientId = req.params.id;
-  
-    console.log(clientId);
-  
+    
     const sql = `SELECT ID, JMBG_Radnik, Auto_VIN, Naziv, DATE_FORMAT(Pocetak_Datum, '%Y-%m-%d') as Pocetak_Datum, DATE_FORMAT(Kraj_Datum, '%Y-%m-%d') as Kraj_Datum, musterija_id, slika FROM popravka WHERE musterija_id = ?`;
     db.query(sql, [clientId], (err, results) => {
       if (err) {
@@ -23,3 +21,17 @@ exports.getPopravkaByClient = (req, res) => {
       res.json(results);
     });
   };
+
+exports.getPopravkaByVin = (req, res) => {
+    const vin = req.params.vin;
+
+    const sql = `SELECT ID, JMBG_Radnik, Auto_VIN, Naziv, DATE_FORMAT(Pocetak_Datum, '%Y-%m-%d') as Pocetak_Datum, DATE_FORMAT(Kraj_Datum, '%Y-%m-%d') as Kraj_Datum, musterija_id, slika FROM popravka WHERE Auto_VIN = ?`;
+    db.query(sql, [vin], (err, results) => {
+      if(err) {
+        console.error('Greška pri upitu:', err);
+        return res.status(500).json({error: 'Database error' });
+      }
+
+      res.json(results);
+    });
+};

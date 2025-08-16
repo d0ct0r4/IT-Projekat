@@ -73,3 +73,17 @@ exports.deleteZahtjev = (req, res) => {
       res.json(result)
     })
 }
+
+exports.getZahtjeviByVin = (req, res) => {
+    const vin = req.params.vin;
+
+    const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum,'%Y-%m-%d'), preuzet FROM zahtjevi WHERE VIN = ?`
+    db.query(sql, vin, (err, result) => {
+      if(err) {
+        console.error('Greska pri upitu:', err);
+        return res.status(500).json({error: 'Database error'});
+      }
+
+      res.json(result);
+    })
+}

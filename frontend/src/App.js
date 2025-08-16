@@ -12,7 +12,7 @@ function App() {
   if (user) {
     // Ulogovan korisnik
     return (
-      <div style={{ padding: 20 }}>
+      <div style={{ padding: 20, position: 'relative' }}>
         {user.role === 'admin' ? (
           <div>
             <AdminDashboard user={user}/>
@@ -28,7 +28,16 @@ function App() {
           </div>
           )
         )}
-        <button onClick={() => setUser(null)}>Logout</button>
+        <button style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            padding: '8px 16px',
+            backgroundColor: '#f00',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '5px',}} 
+            onClick={() => setUser(null)}>Logout</button>
       </div>
     );
   }

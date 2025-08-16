@@ -4,6 +4,9 @@ import DodajAuto from './DodajAuto';
 const AutaTable = ({ user }) => {
   const [auta, setAuta] = useState([]);
   const [dodaj, setDodaj] = useState(null);
+  const [zahtjevi, setZahtjevi] = useState([]);
+  const [popravke, setPopravke] = useState([]);
+  const [pokazi, setPokazi] = useState('');
 
   useEffect(() => {
     if (user?.linked_id) {
@@ -64,7 +67,30 @@ const AutaTable = ({ user }) => {
         alert('Greška pri brisanju vozila');
       });
   };
+
+  const togglePokazi = (vin) => {
+    if(pokazi === vin){
+        setPokazi(null);
+        setZahtjevi([]);
+        setPopravke([]);
+    }
+    else{
+        setPokazi(vin);
+        showTabele(vin);
+    }
+}
   
+  const showTabele = (vin) => {
+      fetch(`http://localhost:8081/popravka/auto/${vin}`)
+      .then((res) => res.json())
+      .then((data) => setPopravke(data))
+      .catch((err) => console.error(err));
+
+      fetch(`http://localhost:8081/zahtjevi/auto/${vin}`)
+      .then((res) => res.json())
+      .then((data) => setZahtjevi(data))
+      .catch((err) => console.error(err));
+  }
 
   return (
     <div>
@@ -76,23 +102,99 @@ const AutaTable = ({ user }) => {
                 {Object.keys(auta[0]).map((key) => (
                 <th key={key}>{key}</th>
                 ))}
-                <th>
-                Action
-                </th>
             </tr>
             </thead>
             <tbody>
-            {auta.map((auto, idx) => (
-                <tr key={idx}>
+            {auta.map((auto) => (
+              <React.Fragment key={auto.VIN}>
+                <tr>
                 {Object.values(auto).map((val, i) => (
                     <td key={i}>{val}</td>
                 ))}
                 <td>
                   <button onClick={() => handleDelete(auto.VIN)}>Delete</button>
+                  <button onClick={() => togglePokazi(auto.VIN)}>
+                      {pokazi === auto.VIN ? '↑' : '↓'}
+                    </button>
                 </td>
                 </tr>
-            ))}
-              
+
+                {pokazi === auto.VIN && (
+                    <tr>
+                      <td colSpan={Object.keys(auto).length + 2}>
+                          {zahtjevi.length > 0 ? (
+                            <table cellPadding="5" style={{ marginTop: '10px', width: '100%' }}>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Musterija ID</th>
+                                <th>JMBG Radnika</th>
+                                <th>VIN</th>
+                                <th>Popravka ID</th>
+                                <th>Datum slanja</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {zahtjevi.map((z, i) => (
+                                <React.Fragment key={z.preuzet}>
+                                    <tr key={i}>
+                                    {Object.values(z).map((val, j) => (
+                                        <td key={j}>
+                                        {j === 6
+                                          ? val === 0
+                                            ? 'Nije preuzeto'
+                                            : val === 1
+                                              ? 'Preuzeto'
+                                              : 'Zavrseno'
+                                          : val}
+                                      </td>
+                                      
+                                    ))}
+                                    <td>
+                                    </td>
+                                    </tr>
+                                </React.Fragment>
+                            ))}
+                            
+                            </tbody>
+                          </table>
+                          ) : (<p></p>)}
+
+                          {popravke.length > 0 ? (
+                            <table cellPadding="5" style={{ marginTop: '20px', width: '100%' }}>
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Radnik</th>
+                                  <th>VIN</th>
+                                  <th>Naziv</th>
+                                  <th>Datum Pocetka</th>
+                                  <th>Datum zavrsetka</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {popravke.map((p, i) => (
+                                  <tr key={i}>
+                                    <td>{p.ID}</td>
+                                    <td>{p.JMBG_Radnik}</td>
+                                    <td>{p.Auto_VIN}</td>
+                                    <td>{p.Naziv}</td>
+                                    <td>{p.Pocetak_Datum}</td>
+                                    <td>{p.Kraj_Datum }</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          ) : (
+                            <p>Nema popravki.</p>
+                          )}
+                      </td>
+                    </tr>
+                )
+                }
+              </React.Fragment>
+              ))}
             </tbody>
             <button onClick={() => setDodaj(1)}>Dodaj Auto</button>
             {dodaj === 1 && (
