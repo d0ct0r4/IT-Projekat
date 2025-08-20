@@ -22,69 +22,71 @@ exports.getRacunByClient = (req, res) => {
     });
   };
   
-  exports.printRacun = (req, res) => {
-    const { musterija_id, popravka_id, datum, sati, cena, zahtjev_id, dijelovi } = req.body;
+  exports.printRacun = async (req, res) => {
+    const { musterija_id, popravka_id, datum, sati, zahtjev_id, dijelovi, radnik_jmbg } = req.body;
     const slika = req.file ? `/uploads/${req.file.filename}` : null;
   
-    const popravkaSql = `UPDATE popravka SET Kraj_Datum = ?, slika = ? WHERE ID = ?`;
-    db.query(popravkaSql, [datum, slika, popravka_id], (err1) => {
-      if (err1) {
-        console.error('Greska pri update-u popravke:', err1);
-        return res.status(500).json({ error: 'Database error' });
+    try {
+      await new Promise((resolve, reject) => {
+        const sql = "UPDATE popravka SET Kraj_Datum = ?, slika = ? WHERE ID = ?";
+        db.query(sql, [datum, slika, popravka_id], (err) => err ? reject(err) : resolve());
+      });
+  
+      let ukupnoDijelovi = 0;
+      for (let d of dijelovi || []) {
+        const cijenaDijela = await new Promise((resolve, reject) => {
+          db.query("SELECT Cijena FROM dijelovi WHERE ID = ?", [d.dioID], (err, result) => {
+            if (err) return reject(err);
+            if (!result[0]) return reject(new Error("Dio ne postoji ID: " + d.dioID));
+            resolve(result[0].Cijena);
+          });
+        });
+  
+        ukupnoDijelovi += cijenaDijela * d.kolicina;
+  
+        await new Promise((resolve, reject) => {
+          db.query("UPDATE dijelovi SET Stanje = Stanje - ? WHERE ID = ?", [d.kolicina, d.dioID], (err) => err ? reject(err) : resolve());
+        });
+      }  
+  
+      const satnicaRadnika = await new Promise((resolve, reject) => {
+        const sql = `
+          SELECT Satnica FROM automehanicar WHERE JMBG_Radnik = ?
+          UNION
+          SELECT Satnica FROM elektricar WHERE JMBG_Radnik = ?
+        `;
+        db.query(sql, [radnik_jmbg, radnik_jmbg], (err, result) => {
+          if (err) return reject(err);
+          if (!result[0]) return resolve(0);
+          resolve(result[0].Satnica);
+        });
+      });
+  
+      const ukupnoRad = satnicaRadnika * sati;
+      const ukupnoCijena = ukupnoDijelovi + ukupnoRad;
+  
+      const racunID = await new Promise((resolve, reject) => {
+        const sql = "INSERT INTO racun(Musterija_ID, Popravka_ID, Datum, sati, Cena) VALUES (?, ?, ?, ?, ?)";
+        db.query(sql, [musterija_id, popravka_id, datum, sati, ukupnoCijena], (err, result) => err ? reject(err) : resolve(result.insertId));
+      });
+  
+      for (let d of dijelovi || []) {
+        await new Promise((resolve, reject) => {
+          const sql = "INSERT INTO racun_djelovi (RacunID, DioID, Kolicina) VALUES (?, ?, ?)";
+          db.query(sql, [racunID, d.dioID, d.kolicina], (err) => err ? reject(err) : resolve());
+        });
       }
   
-      const racunSql = 'INSERT INTO racun(Musterija_ID, Popravka_ID, Datum, sati, Cena) VALUES (?, ?, ?, ?, ?)';
-      db.query(racunSql, [musterija_id, popravka_id, datum, sati, cena], (err2, result2) => {
-        if (err2) {
-          console.error('Greska pri insertu racuna:', err2);
-          return res.status(500).json({ error: 'Database error' });
-        }
-  
-        const racunID = result2.insertId;
-  
-        if (Array.isArray(dijelovi) && dijelovi.length > 0) {
-          let queries = dijelovi.map(d => {
-            return new Promise((resolve, reject) => {
-              const insertStavka = "INSERT INTO racun_djelovi (RacunID, DioID, Kolicina) VALUES (?, ?, ?)";
-              db.query(insertStavka, [racunID, d.dioID, d.kolicina], (err) => {
-                if (err) return reject(err);
-  
-                const updateDio = "UPDATE dijelovi SET Stanje = Stanje - ? WHERE ID = ?";
-                db.query(updateDio, [d.kolicina, d.dioID], (err2) => {
-                  if (err2) return reject(err2);
-                  resolve();
-                });
-              });
-            });
-          });
-  
-          Promise.all(queries)
-            .then(() => {
-              const zahtjevSql = 'UPDATE zahtjevi SET preuzet = 2 WHERE ID = ?';
-              db.query(zahtjevSql, [zahtjev_id], (err3) => {
-                if (err3) {
-                  console.error('Greska pri update zahtjeva:', err3);
-                  return res.status(500).json({ error: 'Database error' });
-                }
-                res.json({ message: 'Račun uspješno kreiran', racunID });
-              });
-            })
-            .catch(err => {
-              console.error('Greška pri ubacivanju dijelova:', err);
-              return res.status(500).json({ error: 'Database error kod dijelova' });
-            });
-  
-        } else {
-          const zahtjevSql = 'UPDATE zahtjevi SET preuzet = 2 WHERE ID = ?';
-          db.query(zahtjevSql, [zahtjev_id], (err3) => {
-            if (err3) {
-              console.error('Greska pri update zahtjeva:', err3);
-              return res.status(500).json({ error: 'Database error' });
-            }
-            res.json({ message: 'Račun uspješno kreiran', racunID });
-          });
-        }
+      await new Promise((resolve, reject) => {
+        const sql = "UPDATE zahtjevi SET preuzet = 2 WHERE ID = ?";
+        db.query(sql, [zahtjev_id], (err) => err ? reject(err) : resolve());
       });
-    });
+  
+      res.json({ message: "Račun uspješno kreiran", racunID, ukupnoCijena });
+  
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
   };
   

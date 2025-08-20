@@ -7,9 +7,6 @@ const ZahtjeviTable = ({ user }) => {
 
   useEffect(() => {
 
-    console.log('User object:', user);
-    console.log('User linked_id:', user?.linked_id);
-
     if (user?.linked_id) {
       fetch(`http://localhost:8081/zahtjevi/client/${user.linked_id}`)
         .then((res) => res.json())
@@ -21,7 +18,7 @@ const ZahtjeviTable = ({ user }) => {
 
       fetch(`http://localhost:8081/auto/vin/${user.linked_id}`)
       .then((res) => res.json())
-      .then((data) => {setVinovi(data);     console.log("Dobijeni VIN-ovi:", data);    })
+      .then((data) => setVinovi(data))
       .catch((err) => console.error('Greška pri dohvaćanju VIN-ova:', err));
     }
   }, [user]);

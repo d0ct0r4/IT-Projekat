@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {use, useEffect, useState} from "react";
 import Preuzmi from "./Preuzmi";
 import Zavrsi from "./Zavrsi";
 
@@ -78,7 +78,8 @@ const MusterijeTable = ({user}) => {
         formData.append('datum', formatted);
         formData.append('sati', sati);
         formData.append('cena', cena);
-        formData.append('zahtjev_id', zahtjev_id)
+        formData.append('zahtjev_id', zahtjev_id);
+        formData.append('radnik_jmbg', user?.radnik_jmbg);
         koristeniDijelovi.forEach((d, i) => {
             formData.append(`dijelovi[${i}][dioID]`, d.dioID);
             formData.append(`dijelovi[${i}][kolicina]`, d.kolicina);

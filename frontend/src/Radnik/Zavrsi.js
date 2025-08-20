@@ -11,7 +11,6 @@ const Zavrsi = ({ onClose, onSubmit }) => {
       fetch("http://localhost:8081/dijelovi")
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           setDijelovi(data);
           setKolicine(new Array(data.length).fill(0)); // inicijalno 0 za svaki red
         })
@@ -33,6 +32,8 @@ const Zavrsi = ({ onClose, onSubmit }) => {
         kolicina: kolicine[i]
       }))
       .filter(d => d.kolicina > 0);
+
+      console.log("Sati: ", sati)
 
       onSubmit({ sati, file, koristeniDijelovi });
       if (onClose) onClose();
@@ -80,7 +81,7 @@ const Zavrsi = ({ onClose, onSubmit }) => {
           
           
           <input type='file' id='slika' accept="image/*" onChange={e => setFile(e.target.files[0])}></input> <br /> <br />
-          <input type='text' id="sati" placeholder='Sati'></input> <br /> <br />
+          <input type='text' id="sati" placeholder='Sati' onChange={e => setSati(e.target.value)}></input> <br /> <br />
           <h4>Korišćeni dijelovi</h4>
         <table>
           <thead>

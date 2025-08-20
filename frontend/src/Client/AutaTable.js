@@ -266,19 +266,20 @@ const AutaTable = ({ user }) => {
               </React.Fragment>
               ))}
             </tbody>
-            <button onClick={() => setDodaj(1)}>Dodaj Auto</button>
-            {dodaj === 1 && (
-              <DodajAuto onClose={() => setDodaj(null)} 
-              onSubmit={(auto) => {handleDodaj(auto.vin, auto.registracija, auto.marka, auto.model, auto.godiste)
-              }}/>
-            )}
         </table>
       ) : (
         <div>
             <p>Nemate auta.</p>
         </div>
       )}
-        
+
+      <button onClick={() => setDodaj(1)}>Dodaj Auto</button>
+      {dodaj === 1 && (
+        <DodajAuto onClose={() => setDodaj(null)} 
+        onSubmit={(auto) => {handleDodaj(auto.vin, auto.registracija, auto.marka, auto.model, auto.godiste)
+        }}/>
+      )}
+
     </div>
   );
 };
