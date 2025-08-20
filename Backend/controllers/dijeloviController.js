@@ -7,3 +7,16 @@ exports.getAllDijelovi = (req, res) => {
     });
 };
 
+exports.getDjeloviByIme = (req, res) => {
+    const ime = req.params.ime;
+
+    const sql = `SELECT * FROM djelovi WHERE Naziv = ?`
+    db.query(sql, ime, (err, results) => {
+        if (err) {
+            console.error('Greška pri upitu:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+    
+        res.json(results);
+    })
+}

@@ -38,27 +38,31 @@ exports.insertZahtjev = (req, res) => {
 exports.preuzetZahtjev = (req, res) => {
   const {id, radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id }= req.body;
 
-  const sql1 = 'UPDATE zahtjevi SET radnik_jmbg = ?, preuzet = 1 WHERE ID = ?';
-  db.query(sql1, [radnik_jmbg, id], (err1, result1) => {
-    if(err1){
-      console.error('Greska pri upitu:', err1);
-      return res.status(500).json({error : 'Database error'});
+  const sql1 = `INSERT INTO popravka (JMBG_Radnik, Auto_VIN, Naziv, Pocetak_Datum, musterija_id) VALUES (?, ?, ?, ?, ?)`;
+  db.query(sql1, [radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id], (errInsert, resultInsert) => {
+    if (errInsert) {
+      console.error('Greška pri insertu popravke:', errInsert);
+      return res.status(500).json({ error: 'Database error kod inserta' });
     }
 
-    const sql2 = 'INSERT INTO popravka(JMBG_Radnik, Auto_VIN, Naziv, Pocetak_Datum, musterija_id) VALUES(?, ?, ?, ?, ?)'
-    db.query(sql2, [radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id], (err2, result2) => {
-      if(err2){
-        console.error('Greska od inserta:', err2);
-        return res.status(500).json({error : 'Database error'}); 
+    const popravkaID = resultInsert.insertId;
+
+    const sql2 = `UPDATE zahtjevi SET radnik_jmbg = ?, preuzet = 1, popravka_ID = ? WHERE ID = ?`;
+    db.query(sql2, [radnik_jmbg, popravkaID, id], (errUpdate, resultUpdate) => {
+      if (errUpdate) {
+        console.error('Greška pri update-u zahtjeva:', errUpdate);
+        return res.status(500).json({ error: 'Database error kod update-a' });
       }
 
       res.json({
-        update: result1,
-        insert: result2
-      });  
-    })
-  })
-}
+        insertPopravka: resultInsert,
+        updateZahtjev: resultUpdate,
+        popravkaID: popravkaID
+      });
+    });
+  });
+};
+
 
 exports.deleteZahtjev = (req, res) => {
     const id = req.params.id;

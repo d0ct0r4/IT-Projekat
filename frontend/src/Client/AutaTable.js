@@ -7,6 +7,7 @@ const AutaTable = ({ user }) => {
   const [zahtjevi, setZahtjevi] = useState([]);
   const [popravke, setPopravke] = useState([]);
   const [pokazi, setPokazi] = useState('');
+  const [popupSlika, setPopupSlika] = useState(null);
 
   useEffect(() => {
     if (user?.linked_id) {
@@ -125,6 +126,7 @@ const AutaTable = ({ user }) => {
                           {zahtjevi.length > 0 ? (
                             <table cellPadding="5" style={{ marginTop: '10px', width: '100%' }}>
                             <thead>
+                            <h4>Zahtjevi</h4>
                             <tr>
                                 <th>ID</th>
                                 <th>Musterija ID</th>
@@ -164,6 +166,7 @@ const AutaTable = ({ user }) => {
                           {popravke.length > 0 ? (
                             <table cellPadding="5" style={{ marginTop: '20px', width: '100%' }}>
                               <thead>
+                              <h4>Popravke</h4>
                                 <tr>
                                   <th>ID</th>
                                   <th>Radnik</th>
@@ -171,6 +174,7 @@ const AutaTable = ({ user }) => {
                                   <th>Naziv</th>
                                   <th>Datum Pocetka</th>
                                   <th>Datum zavrsetka</th>
+                                  <th>Slika</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -182,13 +186,79 @@ const AutaTable = ({ user }) => {
                                     <td>{p.Naziv}</td>
                                     <td>{p.Pocetak_Datum}</td>
                                     <td>{p.Kraj_Datum }</td>
+                                      {p.slika != null ?(
+                                      <span
+                                      style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+                                      onClick={() => setPopupSlika(`http://localhost:8081/${p.slika}`)}
+                                    >
+                                      Vidi sliku
+                                    </span>) : <p>Nema slike</p>
+                                      }
                                   </tr>
                                 ))}
                               </tbody>
                             </table>
                           ) : (
-                            <p>Nema popravki.</p>
+                            <p></p>
                           )}
+
+                          {popupSlika && (
+                            <div
+                                onClick={() => setPopupSlika(null)}
+                                style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                width: '100vw',
+                                height: '100vh',
+                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                zIndex: 1000,
+                                }}
+                            >
+                                <div
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                    background: '#fff',
+                                    padding: '20px',
+                                    borderRadius: '8px',
+                                    minWidth: '300px',
+                                    zIndex: 1001,
+                                    boxShadow: '0 0 10px rgba(0,0,0,1)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '10px'
+                                }}
+                                >
+                                <h3>Slika auta</h3>
+                                <img
+                                    src={popupSlika}
+                                    alt="popup"
+                                    style={{
+                                    maxWidth: '100%',
+                                    maxHeight: '60vh',
+                                    borderRadius: '6px',
+                                    }}
+                                />
+                                <button
+                                    onClick={() => setPopupSlika(null)}
+                                    style={{
+                                    background: 'red',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '5px 10px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    }}
+                                >
+                                    Zatvori
+                                </button>
+                                </div>
+                            </div>
+                        )}
                       </td>
                     </tr>
                 )

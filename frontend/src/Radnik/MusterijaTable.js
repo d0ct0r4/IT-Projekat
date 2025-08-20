@@ -68,7 +68,7 @@ const MusterijeTable = ({user}) => {
           });
       };
 
-    const handleZavrsi = async (sati, file, musterija_id, popravka_id, cena, zahtjev_id) => {
+    const handleZavrsi = async (sati, file, musterija_id, popravka_id, cena, zahtjev_id, koristeniDijelovi) => {
         const today = new Date();
         const formatted = today.toISOString().split('T')[0];
 
@@ -79,6 +79,10 @@ const MusterijeTable = ({user}) => {
         formData.append('sati', sati);
         formData.append('cena', cena);
         formData.append('zahtjev_id', zahtjev_id)
+        koristeniDijelovi.forEach((d, i) => {
+            formData.append(`dijelovi[${i}][dioID]`, d.dioID);
+            formData.append(`dijelovi[${i}][kolicina]`, d.kolicina);
+        });
         if (file) formData.append('slika', file);
 
         try {
@@ -169,8 +173,8 @@ const MusterijeTable = ({user}) => {
 
                                                         {zavrsiID === z.ID && (
                                                             <Zavrsi onClose={() => setZavrsiID(null)}
-                                                            onSubmit={({sati, file}) => {
-                                                                handleZavrsi(sati, file, m.ID, z.popravka_ID, 10, z.ID)
+                                                            onSubmit={({sati, file, koristeniDijelovi}) => {
+                                                                handleZavrsi(sati, file, m.ID, z.popravka_ID, 10, z.ID, koristeniDijelovi)
                                                             }}/>
                                                         )}
                                                         </td>
