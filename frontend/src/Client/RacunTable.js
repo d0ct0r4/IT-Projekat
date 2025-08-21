@@ -57,7 +57,9 @@ const RacunTable = ({ user }) => {
                     <td key={i}>{val}</td>
                   ))}
                   <td>
-                    <button onClick={() => toggleDjelovi(racun.ID)}>T</button>
+                    <button onClick={() => toggleDjelovi(racun.ID)}>
+                      {expandedRacun === racun.ID ? '↑' : '↓'}
+                    </button>
                   </td>
                 </tr>
                 {expandedRacun === racun.ID && racunDjelovi[racun.ID] && (

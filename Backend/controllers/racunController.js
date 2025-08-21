@@ -76,7 +76,7 @@ exports.getRacunByClient = (req, res) => {
       const ukupnoRad = satnicaRadnika * sati;
       const ukupnoCijena = ukupnoDijelovi + ukupnoRad;
   
-      // 4. Insert račun
+      // 4. Insert racun
       const racunID = await new Promise((resolve, reject) => {
         const sql = "INSERT INTO racun(Musterija_ID, Popravka_ID, Datum, sati, Cena) VALUES (?, ?, ?, ?, ?)";
         db.query(sql, [musterija_id, popravka_id, datum, sati, ukupnoCijena], (err, result) => err ? reject(err) : resolve(result.insertId));
