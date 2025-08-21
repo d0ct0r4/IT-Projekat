@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 const RacunTable = ({ user }) => {
   const [racuni, setRacuni] = useState([]);
+  const [racunDjelovi, setRacunDjelovi] = useState({});
+  const [expandedRacun, setExpandedRacun] = useState(null);
 
   useEffect(() => {
     if (user?.linked_id) {
@@ -15,6 +17,25 @@ const RacunTable = ({ user }) => {
     }
   }, [user]);
 
+  const toggleDjelovi = (racunId) => {
+    if (expandedRacun === racunId) {
+      setExpandedRacun(null);
+      return;
+    }
+
+    if (!racunDjelovi[racunId]) {
+      fetch(`http://localhost:8081/racunDjelovi/client/${racunId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setRacunDjelovi((prev) => ({ ...prev, [racunId]: data }));
+          setExpandedRacun(racunId);
+        })
+        .catch((err) => console.error('Greška pri dohvaćanju racunDjelova:', err));
+    } else {
+      setExpandedRacun(racunId);
+    }
+  };
+
   return (
     <div>
       <h2>Moja Vozila</h2>
@@ -25,15 +46,49 @@ const RacunTable = ({ user }) => {
               {Object.keys(racuni[0]).map((key) => (
                 <th key={key}>{key}</th>
               ))}
+              <th>Akcija</th>
             </tr>
           </thead>
           <tbody>
             {racuni.map((racun, idx) => (
-              <tr key={idx}>
-                {Object.values(racun).map((val, i) => (
-                  <td key={i}>{val}</td>
-                ))}
-              </tr>
+              <React.Fragment key={idx}>
+                <tr>
+                  {Object.values(racun).map((val, i) => (
+                    <td key={i}>{val}</td>
+                  ))}
+                  <td>
+                    <button onClick={() => toggleDjelovi(racun.ID)}>T</button>
+                  </td>
+                </tr>
+                {expandedRacun === racun.ID && racunDjelovi[racun.ID] && (
+                  <tr>
+                    <td colSpan={Object.keys(racun).length + 1}>
+                      {racunDjelovi[racun.ID].length > 0 ? (
+                        <table>
+                          <thead>
+                            <tr>
+                              {Object.keys(racunDjelovi[racun.ID][0]).map((key) => (
+                                <th key={key}>{key}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {racunDjelovi[racun.ID].map((dio, i) => (
+                              <tr key={i}>
+                                {Object.values(dio).map((val, j) => (
+                                  <td key={j}>{val}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <p>Nema dijelova za ovaj račun.</p>
+                      )}
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             ))}
           </tbody>
         </table>
