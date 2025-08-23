@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('client');
+  const [ime, setIme] = useState('');
+  const [prezime, setPrezime] = useState('');
+  const [brojTelefona, setBrojTelefona] = useState('');
   const [msg, setMsg] = useState('');
 
   const handleRegister = async () => {
@@ -11,7 +13,7 @@ function Register() {
       const res = await fetch('http://localhost:8081/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, role }),
+        body: JSON.stringify({ username, password, ime, prezime, brojTelefona }),
       });
 
       const data = await res.json();
@@ -40,10 +42,24 @@ function Register() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       /><br />
-      <select value={role} onChange={(e) => setRole(e.target.value)}>
-        <option value="client">Client</option>
-        <option value="admin">Admin</option>
-      </select><br />
+      <input
+        type="text"
+        placeholder="Ime"
+        value={ime}
+        onChange={(e) => setIme(e.target.value)}
+      /><br />
+      <input
+        type="text"
+        placeholder="Prezime"
+        value={prezime}
+        onChange={(e) => setPrezime(e.target.value)}
+      /><br />
+      <input
+        type="text"
+        placeholder="Broj telefona"
+        value={brojTelefona}
+        onChange={(e) => setBrojTelefona(e.target.value)}
+      /><br />
       <button onClick={handleRegister}>Register</button>
       <p>{msg}</p>
     </div>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DodajAuto from './DodajAuto';
+import DodajZahtjev from './DodajZahtjev';
+
 
 const AutaTable = ({ user }) => {
   const [auta, setAuta] = useState([]);
@@ -8,6 +10,8 @@ const AutaTable = ({ user }) => {
   const [popravke, setPopravke] = useState([]);
   const [pokazi, setPokazi] = useState('');
   const [popupSlika, setPopupSlika] = useState(null);
+  const [dodajZahtjev, setDodajZahtjev] = useState(null);
+
 
   useEffect(() => {
     if (user?.linked_id) {
@@ -93,6 +97,29 @@ const AutaTable = ({ user }) => {
       .catch((err) => console.error(err));
   }
 
+  const handleDodajZahtjev = ({ vin, musterijaId, naziv }) => {
+    fetch('http://localhost:8081/zahtjevi/insert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        musterija_ID: user?.linked_id,
+        Vin: vin,
+        naziv: naziv,
+        poslan_datum: new Date().toISOString().split('T')[0]
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        alert('Zahtjev uspješno poslan!');
+        showTabele(vin); // osvježi tabelu zahtjeva
+      })
+      .catch((err) => {
+        console.error('Greška pri slanju zahtjeva:', err);
+        alert('Greška pri slanju zahtjeva');
+      });
+  };
+  
+
   return (
     <div>
         <h2>Moja Vozila</h2>
@@ -117,6 +144,8 @@ const AutaTable = ({ user }) => {
                   <button onClick={() => togglePokazi(auto.VIN)}>
                       {pokazi === auto.VIN ? '↑' : '↓'}
                     </button>
+                    <button onClick={() => setDodajZahtjev(auto.VIN)}>Dodaj Zahtjev</button>
+
                 </td>
                 </tr>
 
@@ -135,6 +164,7 @@ const AutaTable = ({ user }) => {
                                 <th>Popravka ID</th>
                                 <th>Datum slanja</th>
                                 <th>Status</th>
+                                <th>Opis</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -280,6 +310,14 @@ const AutaTable = ({ user }) => {
         }}/>
       )}
 
+      {dodajZahtjev && (
+        <DodajZahtjev
+          vin={dodajZahtjev}
+          musterijaId={user?.linked_id}
+          onClose={() => setDodajZahtjev(null)}
+          onSubmit={handleDodajZahtjev}
+        />
+      )}
     </div>
   );
 };

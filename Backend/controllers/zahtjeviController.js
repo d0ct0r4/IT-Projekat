@@ -10,7 +10,7 @@ exports.getAllZahtjevi = (req, res) => {
 exports.getZahtjeviByClient = (req, res) => {
     const clientId = req.params.id;
   
-    const sql = 'SELECT * FROM zahtjevi WHERE musterija_ID = ?';
+    const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum, '%y-%m-%d') AS poslan_datum, preuzet, naziv FROM zahtjevi WHERE musterija_ID = ?`;
     db.query(sql, [clientId], (err, results) => {
       if (err) {
         console.error('Greška pri upitu:', err);
@@ -22,10 +22,10 @@ exports.getZahtjeviByClient = (req, res) => {
   };
 
 exports.insertZahtjev = (req, res) => {
-  const {musterija_ID, Vin, poslan_datum} = req.body;
+  const {musterija_ID, Vin, naziv, poslan_datum} = req.body;
 
-  const sql = 'INSERT INTO zahtjevi (musterija_ID, VIN, poslan_datum, preuzet) VALUES (?, ?, ?, FALSE)';
-  db.query(sql, [musterija_ID, Vin, poslan_datum], (err, result) => {
+  const sql = 'INSERT INTO zahtjevi (musterija_ID, VIN, naziv, poslan_datum, preuzet) VALUES (?, ?, ?, ?, FALSE)';
+  db.query(sql, [musterija_ID, Vin, naziv, poslan_datum], (err, result) => {
     if (err) {
       console.error('Greška pri unosu zahtjeva:', err);
       return res.status(500).json({ error: 'Database error' });
@@ -36,10 +36,10 @@ exports.insertZahtjev = (req, res) => {
 };
 
 exports.preuzetZahtjev = (req, res) => {
-  const {id, radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id }= req.body;
+  const {id, radnik_jmbg, Auto_VIN, pocetak_datum, musterija_id }= req.body;
 
-  const sql1 = `INSERT INTO popravka (JMBG_Radnik, Auto_VIN, Naziv, Pocetak_Datum, musterija_id) VALUES (?, ?, ?, ?, ?)`;
-  db.query(sql1, [radnik_jmbg, Auto_VIN, naziv, pocetak_datum, musterija_id], (errInsert, resultInsert) => {
+  const sql1 = `INSERT INTO popravka (JMBG_Radnik, Auto_VIN, Pocetak_Datum, musterija_id) VALUES (?, ?, ?, ?, ?)`;
+  db.query(sql1, [radnik_jmbg, Auto_VIN, pocetak_datum, musterija_id], (errInsert, resultInsert) => {
     if (errInsert) {
       console.error('Greška pri insertu popravke:', errInsert);
       return res.status(500).json({ error: 'Database error kod inserta' });
@@ -81,7 +81,7 @@ exports.deleteZahtjev = (req, res) => {
 exports.getZahtjeviByVin = (req, res) => {
     const vin = req.params.vin;
 
-    const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum,'%Y-%m-%d'), preuzet FROM zahtjevi WHERE VIN = ?`
+    const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum,'%Y-%m-%d'), preuzet, naziv FROM zahtjevi WHERE VIN = ?`
     db.query(sql, vin, (err, result) => {
       if(err) {
         console.error('Greska pri upitu:', err);

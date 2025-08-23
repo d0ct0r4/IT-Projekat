@@ -70,21 +70,32 @@ const ZahtjeviTable = ({ user }) => {
 
   return (
     <div>
-      <h2>Moja Vozila</h2>
+      <h2>Moja Zahtjevi</h2>
       {zahtjevi.length > 0 ? (
         <table>
           <thead>
             <tr>
-              {Object.keys(zahtjevi[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
+              <th>ID</th>
+              <th>ID Musterije</th>
+              <th>JMBG Radnika</th>
+              <th>VIN</th>
+              <th>ID Popravke</th>
+              <th>Datum Slanja</th>
+              <th>Status</th>
+              <th>Opis</th>
             </tr>
           </thead>
           <tbody>
             {zahtjevi.map((zahtjev, idx) => (
               <tr key={idx}>
                 {Object.values(zahtjev).map((val, i) => (
-                  <td key={i}>{val}</td>
+                  <td key={i}>{i === 6
+                    ? val === 0
+                      ? 'Nije preuzeto'
+                      : val === 1
+                        ? 'Preuzeto'
+                        : 'Zavrseno'
+                    : val}</td>
                 ))}
                 <td><button onClick={() => handleDelete(zahtjev.ID)}>Delete</button></td>
               </tr>

@@ -37,7 +37,6 @@ exports.deleteCarsByVIN = (req, res) => {
 }
 
 exports.insertAuto = (req, res) => {
-    console.log(req.body);
     const { Vin, Marka, Model, Godiste, Registracija, Vlasnik_ID } = req.body;
   
     const sql = 'INSERT INTO auto (VIN, Marka, Model, Godiste, Registracija, Vlasnik_ID) VALUES (?, ?, ?, ?, ?, ?)';
@@ -53,8 +52,6 @@ exports.insertAuto = (req, res) => {
 
 exports.getVinByVlasnik = (req, res) => {
     const id = req.params.id;
-
-    console.log(id);
 
     const sql = 'SELECT VIN FROM auto WHERE Vlasnik_ID = ?'
     db.query(sql, [id], (err, result) => {

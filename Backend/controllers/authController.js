@@ -26,22 +26,31 @@ const loginUser = (req, res) => {
 };
 
 const registerUser = (req, res) => {
-    const { username, password, role } = req.body;
-  
-    const checkSql = 'SELECT * FROM users WHERE username = ?';
-    db.query(checkSql, [username], (err, results) => {
+  const { username, password, ime, prezime, brojTelefona } = req.body;
+
+  const role = "client";
+
+  const checkSql = 'SELECT * FROM users WHERE username = ?';
+  db.query(checkSql, [username], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    if (results.length > 0) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    const insertMusterija = 'INSERT INTO musterija (Ime, Prezime, Broj_Telefona) VALUES (?, ?, ?)';
+    db.query(insertMusterija, [ime, prezime, brojTelefona], (err, resultMusterija) => {
       if (err) return res.status(500).json({ error: err });
-      if (results.length > 0) {
-        return res.status(400).json({ message: 'Username already exists' });
-      }
-  
-      const insertSql = 'INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)';
-      db.query(insertSql, [username, password, role], (err, result) => {
-        if (err) return res.status(500).json({ error: err });
+
+      const musterijaId = resultMusterija.insertId;
+
+      const insertUser = 'INSERT INTO users (username, password_hash, role, linked_id) VALUES (?, ?, ?, ?)';
+      db.query(insertUser, [username, password, role, musterijaId], (err2) => {
+        if (err2) return res.status(500).json({ error: err2 });
         return res.json({ message: 'User registered successfully' });
       });
     });
-  };
-  
+  });
+};
+
 
 module.exports = { loginUser, registerUser };

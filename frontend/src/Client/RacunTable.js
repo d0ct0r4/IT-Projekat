@@ -38,7 +38,7 @@ const RacunTable = ({ user }) => {
 
   return (
     <div>
-      <h2>Moja Vozila</h2>
+      <h2>Moji Racuni</h2>
       {racuni.length > 0 ? (
         <table>
           <thead>
