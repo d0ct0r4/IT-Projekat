@@ -43,9 +43,12 @@ const RacunTable = ({ user }) => {
         <table>
           <thead>
             <tr>
-              {Object.keys(racuni[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
+              <th>ID</th>
+              <th>ID Musterije</th>
+              <th>ID Popravke</th>
+              <th>Datum</th>
+              <th>Sati</th>
+              <th>Cena</th>
               <th>Akcija</th>
             </tr>
           </thead>

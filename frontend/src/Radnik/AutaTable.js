@@ -41,12 +41,12 @@ const AutaTable = ({ user }) => {
         <table>
             <thead>
             <tr>
-                {Object.keys(auta[0]).map((key) => (
-                <th key={key}>{key}</th>
-                ))}
-                <th>
-                Action
-                </th>
+                <th>VIN</th>
+                <th>ID Vlasnika</th>
+                <th>Registracija</th>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Godiste</th>
             </tr>
             </thead>
             <tbody>

@@ -6,7 +6,7 @@ const ZahtjeviTable = ({ user }) => {
   useEffect(() => {
     fetch(`http://localhost:8081/zahtjevi/`)
       .then((res) => res.json())
-      .then((data) => setZahtjevi(data))
+      .then((data) => setZahtjevi(data))  
       .catch((err) => {
         console.error('Greška pri dohvaćanju zahtjeva:', err);
         setZahtjevi([]);
@@ -20,9 +20,14 @@ const ZahtjeviTable = ({ user }) => {
         <table>
           <thead>
             <tr>
-              {Object.keys(zahtjevi[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
+            <th>ID</th>
+              <th>ID Musterije</th>
+              <th>JMBG Radnika</th>
+              <th>VIN</th>
+              <th>ID Popravke</th>
+              <th>Datum Slanja</th>
+              <th>Status</th>
+              <th>Opis</th>
             </tr>
           </thead>
           <tbody>
