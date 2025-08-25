@@ -1,4 +1,5 @@
 import React, { use, useState } from 'react';
+import KorisniciTable from './Admin/KorisniciTable';
 
 const AdminDashboard = ({ user }) => {
   const [selectedTable, setSelectedTable] = useState('musterija');
@@ -8,7 +9,7 @@ const AdminDashboard = ({ user }) => {
   const renderTable = () => {
     switch (selectedTable) {
       case 'korisnici':
-        return <p>Test</p>
+        return <KorisniciTable></KorisniciTable>
       default:
         return <p>Izaberite tabelu.</p>;
     }
