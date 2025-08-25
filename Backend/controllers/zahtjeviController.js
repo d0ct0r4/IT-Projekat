@@ -38,7 +38,7 @@ exports.insertZahtjev = (req, res) => {
 exports.preuzetZahtjev = (req, res) => {
   const {id, radnik_jmbg, Auto_VIN, pocetak_datum, musterija_id }= req.body;
 
-  const sql1 = `INSERT INTO popravka (JMBG_Radnik, Auto_VIN, Pocetak_Datum, musterija_id) VALUES (?, ?, ?, ?, ?)`;
+  const sql1 = `INSERT INTO popravka (JMBG_Radnik, Auto_VIN, Pocetak_Datum, musterija_id) VALUES (?, ?, ?, ?)`;
   db.query(sql1, [radnik_jmbg, Auto_VIN, pocetak_datum, musterija_id], (errInsert, resultInsert) => {
     if (errInsert) {
       console.error('Greška pri insertu popravke:', errInsert);

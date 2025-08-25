@@ -40,7 +40,7 @@ const PopravkaTable = ({ user }) => {
                     val != null ?(
                     <span
                     style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-                    onClick={() => setPopupSlika(`http://localhost:8081/${val}`)}
+                    onClick={() => setPopupSlika(`http://localhost:8081${val}`)}
                   >
                     Vidi sliku
                   </span>) : <p>Nema slike</p>

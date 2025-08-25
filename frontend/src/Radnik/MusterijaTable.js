@@ -1,12 +1,10 @@
-import React, {use, useEffect, useState} from "react";
-import Preuzmi from "./Preuzmi";
+import React, {useEffect, useState} from "react";
 import Zavrsi from "./Zavrsi";
 
 const MusterijeTable = ({user}) => {
     const [musterije, setMusterije] = useState([]);
     const [zahtjevi, setZahtjevi] = useState([]);
     const [pokazi, setPokazi] = useState(null);
-    const [preuzmiID, setPreuzmiID] = useState(null);
     const [zavrsiID, setZavrsiID] = useState(null);
     
     useEffect (() => {
@@ -40,8 +38,7 @@ const MusterijeTable = ({user}) => {
         })
     }
 
-    const handlePreuzmi = (id, vin, musterija_id, naziv) => {
-
+    const handlePreuzmi = (id, vin, musterija_id) => {
         const today = new Date();
         const formatted = today.toISOString().split('T')[0];
 
@@ -52,13 +49,12 @@ const MusterijeTable = ({user}) => {
             id: id,
             radnik_jmbg: user?.radnik_jmbg,
             Auto_VIN: vin,
-            naziv: naziv,
             pocetak_datum: formatted,
             musterija_id: musterija_id
           }),
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then(() => {
             alert('Uspjesno preuzet');
             showZahtjevi(pokazi);
           })
@@ -91,7 +87,7 @@ const MusterijeTable = ({user}) => {
             method: 'POST',
             body: formData,
         });
-        const data = await res.json();
+        await res.json();
         alert('Završeno uspešno');
         showZahtjevi(pokazi);
         setZavrsiID(null);
@@ -118,8 +114,8 @@ const MusterijeTable = ({user}) => {
                         {musterije.map((m) => (
                             <React.Fragment key={m.ID}>
                             <tr>
-                            {Object.values(m).map((val) => (
-                                <td>{val}</td>
+                            {Object.values(m).map((val, i) => (
+                                <td key={i}>{val}</td>
                             ))}
                             <td>
                               <button onClick={() => togglePokazi(m.ID)}>
@@ -130,7 +126,7 @@ const MusterijeTable = ({user}) => {
                             
                             {pokazi === m.ID && (
                                 <tr>
-                                    <td  colSpan={Object.keys(m).length + 2}>
+                                    <td colSpan={Object.keys(m).length + 2}>
                                         {zahtjevi.length > 0 ? (
                                             <table cellPadding="5" style={{ marginTop: '10px', width: '100%' }}>
                                                 <thead>
@@ -142,48 +138,42 @@ const MusterijeTable = ({user}) => {
                                                     <th>Popravka ID</th>
                                                     <th>Datum slanja</th>
                                                     <th>Status</th>
+                                                    <th>Akcija</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 {zahtjevi.map((z, i) => (
-                                                    <React.Fragment key={z.preuzet}>
-                                                        <tr key={i}>
+                                                    <tr key={i}>
                                                         {Object.values(z).map((val, j) => (
                                                             <td key={j}>
-                                                            {j === 6
-                                                              ? val === 0
-                                                                ? 'Nije preuzeto'
-                                                                : val === 1
-                                                                  ? 'Preuzeto'
-                                                                  : 'Zavrseno'
-                                                              : val}
-                                                          </td>
-                                                          
+                                                                {j === 6
+                                                                ? val === 0
+                                                                    ? 'Nije preuzeto'
+                                                                    : val === 1
+                                                                    ? 'Preuzeto'
+                                                                    : 'Zavrseno'
+                                                                : val}
+                                                            </td>
                                                         ))}
                                                         <td>
-                                                        {z.preuzet === 0 ? (
-                                                            <button onClick={() => setPreuzmiID(z.ID)}>Preuzmi</button>) : 
-                                                            (z.preuzet === 1) ? (<button onClick={() => setZavrsiID(z.ID)}>Zavrsi</button>) :
-                                                            null}
-                                                        {preuzmiID === z.ID && (
-                                                            <Preuzmi onClose={() => setPreuzmiID(null)} 
-                                                            onSubmit={(data) => {
-                                                                handlePreuzmi(z.ID, z.VIN, z.musterija_ID, data.text)
-                                                            }}/>                                                        
-                                                        )}
-
-                                                        {zavrsiID === z.ID && (
-                                                            <Zavrsi onClose={() => setZavrsiID(null)}
-                                                            onSubmit={({sati, file, koristeniDijelovi}) => {
-                                                                handleZavrsi(sati, file, m.ID, z.popravka_ID, 10, z.ID, koristeniDijelovi)
-                                                            }}/>
-                                                        )}
+                                                            {z.preuzet === 0 ? (
+                                                                <button onClick={() => handlePreuzmi(z.ID, z.VIN, z.musterija_ID)}>
+                                                                    Preuzmi
+                                                                </button>
+                                                            ) : 
+                                                            (z.preuzet === 1) ? (
+                                                                <button onClick={() => setZavrsiID(z.ID)}>Zavrsi</button>
+                                                            ) : null}
+                                                            {zavrsiID === z.ID && (
+                                                                <Zavrsi onClose={() => setZavrsiID(null)}
+                                                                    onSubmit={({sati, file, koristeniDijelovi}) => {
+                                                                        handleZavrsi(sati, file, m.ID, z.popravka_ID, 10, z.ID, koristeniDijelovi)
+                                                                    }}
+                                                                />
+                                                            )}
                                                         </td>
-                                                        </tr>
-                                                        
-                                                    </React.Fragment>
+                                                    </tr>
                                                 ))}
-                                                
                                                 </tbody>
                                             </table>
                                         ) : (
