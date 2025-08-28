@@ -1,17 +1,18 @@
 import React, { use, useState } from 'react';
 import KorisniciTable from './Admin/KorisniciTable';
+import RadniciTable from './Admin/RadniciTable';
 
 const AdminDashboard = ({ user }) => {
   const [selectedTable, setSelectedTable] = useState('musterija');
-
-  console.log(user);
 
   const renderTable = () => {
     switch (selectedTable) {
       case 'korisnici':
         return <KorisniciTable></KorisniciTable>
+      case 'radnici':
+        return <RadniciTable></RadniciTable>
       default:
-        return <p>Izaberite tabelu.</p>;
+        return <KorisniciTable></KorisniciTable>;
     }
   };
   return (

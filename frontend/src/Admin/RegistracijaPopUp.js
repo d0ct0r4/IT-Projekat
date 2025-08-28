@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
 
 const RegistracijaPopUp = ({ onClose, onSubmit }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('radnik'); // default radnik
-  const [linkedId, setLinkedId] = useState(''); // optional
-  const [radnikJmbg, setRadnikJmbg] = useState(''); // optional
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    role: 'radnik', // default
+    jmbg: '',
+    ime: '',
+    prezime: '',
+    datumRodjenja: '',
+    brojTelefona: '',
+    tipRadnika: 'automehanicar', // automehanicar ili elektricar
+    godineIskustva: '',
+    satnica: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = () => {
-    if (!username || !password || !role) {
+    if (!formData.username || !formData.password || !formData.role) {
       alert('Popunite obavezna polja (username, password, role)!');
       return;
     }
 
-    onSubmit({
-      username,
-      password,
-      role,
-      linked_id: linkedId || null,
-      radnik_jmbg: radnikJmbg || null
-    });
-
+    onSubmit(formData);
     onClose();
   };
 
@@ -43,34 +49,110 @@ const RegistracijaPopUp = ({ onClose, onSubmit }) => {
         style={{
           background: '#fff',
           padding: '20px',
-          borderRadius: '8px',
-          minWidth: '300px',
-          boxShadow: '0 0 10px rgba(0,0,0,0.25)',
+          borderRadius: '10px',
+          minWidth: '400px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          position: 'relative',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
         }}
       >
-        <h2>Registracija korisnika</h2>
+        {/* X dugme gore desno */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            border: 'none',
+            background: 'transparent',
+            fontSize: '20px',
+            cursor: 'pointer',
+          }}
+        >
+          ✖
+        </button>
 
-        <label>Username:</label>
-        <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+        <h2 style={{ textAlign: 'center', marginBottom: '15px' }}>
+          Registracija korisnika
+        </h2>
 
-        <label>Password:</label>
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        {/* Polja */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <label>Username:</label>
+          <input type="text" name="username" value={formData.username} onChange={handleChange} />
 
-        <label>Role:</label>
-        <select value={role} onChange={e => setRole(e.target.value)}>
-          <option value="radnik">Radnik</option>
-          <option value="admin">Admin</option>
-        </select>
+          <label>Password:</label>
+          <input type="password" name="password" value={formData.password} onChange={handleChange} />
 
-        <label>Linked ID (opcionalno):</label>
-        <input type="text" value={linkedId} onChange={e => setLinkedId(e.target.value)} />
+          <label>Role:</label>
+          <select name="role" value={formData.role} onChange={handleChange}>
+            <option value="radnik">Radnik</option>
+            <option value="admin">Admin</option>
+          </select>
 
-        <label>Radnik JMBG (opcionalno):</label>
-        <input type="text" value={radnikJmbg} onChange={e => setRadnikJmbg(e.target.value)} />
+          {formData.role === 'radnik' && (
+            <>
+              <hr style={{ margin: '10px 0' }} />
+              <h3>Podaci o radniku</h3>
 
-        <div style={{ marginTop: '10px' }}>
-          <button onClick={handleSubmit} style={{ marginRight: '10px' }}>Registruj</button>
-          <button onClick={onClose} style={{ background: 'red', color: 'white' }}>Zatvori</button>
+              <label>JMBG:</label>
+              <input type="text" name="jmbg" value={formData.jmbg} onChange={handleChange} />
+
+              <label>Ime:</label>
+              <input type="text" name="ime" value={formData.ime} onChange={handleChange} />
+
+              <label>Prezime:</label>
+              <input type="text" name="prezime" value={formData.prezime} onChange={handleChange} />
+
+              <label>Datum rođenja:</label>
+              <input type="date" name="datumRodjenja" value={formData.datumRodjenja} onChange={handleChange} />
+
+              <label>Broj telefona:</label>
+              <input type="text" name="brojTelefona" value={formData.brojTelefona} onChange={handleChange} />
+
+              <label>Tip radnika:</label>
+              <select name="tipRadnika" value={formData.tipRadnika} onChange={handleChange}>
+                <option value="automehanicar">Automehaničar</option>
+                <option value="elektricar">Električar</option>
+              </select>
+
+              <label>Godine iskustva:</label>
+              <input type="number" name="godineIskustva" value={formData.godineIskustva} onChange={handleChange} />
+
+              <label>Satnica:</label>
+              <input type="number" name="satnica" value={formData.satnica} onChange={handleChange} />
+            </>
+          )}
+        </div>
+
+        {/* Dugmad dole */}
+        <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+          <button
+            onClick={handleSubmit}
+            style={{
+              background: 'green',
+              color: 'white',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            Registruj
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              background: '#ccc',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            Zatvori
+          </button>
         </div>
       </div>
     </div>
