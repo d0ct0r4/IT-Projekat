@@ -63,3 +63,48 @@ exports.getVinByVlasnik = (req, res) => {
       res.json(result);
     })
 }
+
+// Dohvati sve marke
+exports.getMarke = (req, res) => {
+  db.query("SELECT DISTINCT Marka FROM auto", (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results.map((r) => r.Marka));
+  });
+};
+
+// Dohvati modele po marki
+exports.getModeliByMarka = (req, res) => {
+  const { marka } = req.params;
+  db.query("SELECT DISTINCT Model FROM auto WHERE Marka = ?", [marka], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results.map((r) => r.Model));
+  });
+};
+
+// Search i filter po VIN, marki i modelu
+exports.searchAuta = (req, res) => {
+  const { q, marka, model } = req.query;
+
+  let sql = "SELECT * FROM auto WHERE 1=1";
+  const params = [];
+
+  if (q) {
+    sql += " AND VIN LIKE ?";
+    params.push(`%${q}%`);
+  }
+
+  if (marka) {
+    sql += " AND Marka = ?";
+    params.push(marka);
+  }
+
+  if (model) {
+    sql += " AND Model = ?";
+    params.push(model);
+  }
+
+  db.query(sql, params, (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+};
