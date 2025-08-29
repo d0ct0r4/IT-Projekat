@@ -30,7 +30,7 @@ exports.updateDio = (req, res) => {
     const { id } = req.params;
     const { Naziv, Cijena, Stanje } = req.body;
   
-    const sql = "UPDATE djelovi SET Naziv = ?, Cijena = ?, Stanje = ? WHERE ID = ?";
+    const sql = "UPDATE dijelovi SET Naziv = ?, Cijena = ?, Stanje = ? WHERE ID = ?";
     db.query(sql, [Naziv, Cijena, Stanje, id], (err, result) => {
       if (err) {
         console.error("Greška pri izmjeni dijela:", err);
@@ -43,7 +43,7 @@ exports.updateDio = (req, res) => {
   exports.deleteDio = (req, res) => {
     const { id } = req.params;
   
-    const sql = "DELETE FROM djelovi WHERE ID = ?";
+    const sql = "DELETE FROM dijelovi WHERE ID = ?";
     db.query(sql, [id], (err, result) => {
       if (err) {
         console.error("Greška pri brisanju dijela:", err);
@@ -52,3 +52,16 @@ exports.updateDio = (req, res) => {
       res.json({ message: "Dio uspješno obrisan" });
     });
   };
+
+  exports.pretraziDijelove = (req, res) => {
+  const { q } = req.query; // npr. /dijelovi/search?q=ulje
+  const sql = "SELECT * FROM dijelovi WHERE Naziv LIKE ?";
+
+  db.query(sql, [`%${q}%`], (err, results) => {
+    if (err) {
+      console.error("Greška u pretrazi:", err);
+      return res.status(500).json({ error: "Greška servera" });
+    }
+    res.json(results);
+  });
+};

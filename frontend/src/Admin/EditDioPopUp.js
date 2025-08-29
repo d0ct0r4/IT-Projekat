@@ -16,8 +16,8 @@ const EditDioPopUp = ({ dio, onClose, onUpdated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await fetch(`http://localhost:8081/dijelovi/${dio.ID}`, {
-      method: "PUT",
+    await fetch(`http://localhost:8081/dijelovi/edit/${dio.ID}`, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ Naziv: naziv, Cijena: cijena, Stanje: stanje }),
     });
