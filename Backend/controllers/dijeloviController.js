@@ -1,22 +1,27 @@
-const db = require('../db');
+const db = require("../db");
 
-exports.getAllDijelovi = (req, res) => {
-    db.query("SELECT * FROM dijelovi", (err, data) =>{
-        if(err) return err;
-        res.json(data);
-    });
+// Svi dijelovi
+exports.getDjelovi = (req, res) => {
+  db.query("SELECT * FROM dijelovi", (err, data) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(data);
+  });
 };
 
-exports.getDjeloviByIme = (req, res) => {
-    const ime = req.params.ime;
+// POST dodaj dio
+exports.addDio = (req, res) => {
+  const { Naziv, Cijena, Stanje } = req.body;
 
-    const sql = `SELECT * FROM djelovi WHERE Naziv = ?`
-    db.query(sql, ime, (err, results) => {
-        if (err) {
-            console.error('Greška pri upitu:', err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-    
-        res.json(results);
-    })
-}
+  if (!Naziv || !Cijena || !Stanje) {
+    return res.status(400).json({ error: "Sva polja su obavezna" });
+  }
+
+  const sql = "INSERT INTO dijelovi (Naziv, Cijena, Stanje) VALUES (?, ?, ?)";
+  db.query(sql, [Naziv, Cijena, Stanje], (err, result) => {
+    if (err) {
+      console.error("Greška pri dodavanju dijela:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "Dio uspješno dodat", id: result.insertId });
+  });
+};

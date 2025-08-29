@@ -119,7 +119,7 @@ const MusterijeTable = ({user}) => {
                             ))}
                             <td>
                               <button onClick={() => togglePokazi(m.ID)}>
-                                {pokazi === m.ID ? 'Sakrij' : 'Prikaži'}
+                                {pokazi === m.ID ? '↑' : '↓'}
                               </button>
                             </td>
                             </tr>

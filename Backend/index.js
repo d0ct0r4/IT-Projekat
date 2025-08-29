@@ -20,6 +20,8 @@ app.use('/dijelovi', require('./routes/dijelovi'));
 app.use('/auth', require('./routes/auth'));
 app.use('/zahtjevi', require('./routes/zahtjevi'));
 app.use('/racunDjelovi', require('./routes/racunDjelovi'));
+app.use("/dostava", require("./routes/dostava"));
+
 
 app.get('/', (req, res) => {
     res.send("Pokrenut backend");
