@@ -10,7 +10,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/auto', require('./routes/auto'));
 app.use('/automehanicar', require('./routes/automehanicar'));
 app.use('/elektricar', require('./routes/elektricar'));
-app.use('/firma', require('./routes/firma'));
 app.use('/musterija', require('./routes/musterija'));
 app.use('/nabavka', require('./routes/nabavka'));
 app.use('/popravka', require('./routes/popravka'));

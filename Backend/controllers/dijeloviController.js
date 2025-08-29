@@ -25,3 +25,30 @@ exports.addDio = (req, res) => {
     res.json({ message: "Dio uspješno dodat", id: result.insertId });
   });
 };
+
+exports.updateDio = (req, res) => {
+    const { id } = req.params;
+    const { Naziv, Cijena, Stanje } = req.body;
+  
+    const sql = "UPDATE djelovi SET Naziv = ?, Cijena = ?, Stanje = ? WHERE ID = ?";
+    db.query(sql, [Naziv, Cijena, Stanje, id], (err, result) => {
+      if (err) {
+        console.error("Greška pri izmjeni dijela:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+      res.json({ message: "Dio uspješno izmijenjen" });
+    });
+  };
+
+  exports.deleteDio = (req, res) => {
+    const { id } = req.params;
+  
+    const sql = "DELETE FROM djelovi WHERE ID = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Greška pri brisanju dijela:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+      res.json({ message: "Dio uspješno obrisan" });
+    });
+  };
