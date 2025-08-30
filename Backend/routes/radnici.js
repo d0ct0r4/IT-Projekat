@@ -9,5 +9,6 @@ router.get("/elektricari", getElektricari);
 router.post("/create", createRadnik);
 router.delete("/:jmbg", deleteRadnik);
 router.put("/:jmbg", updateRadnik);
+router.put("/update/:jmbg", updateRadnik);
 
 module.exports = router;

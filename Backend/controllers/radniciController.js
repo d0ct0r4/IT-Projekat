@@ -136,3 +136,15 @@ exports.updateRadnik = (req, res) => {
     res.json({ message: "Radnik uspješno ažuriran" });
   });
 };
+
+// controllers/radniciController.js
+exports.updateRadnik = (req, res) => {
+  const { jmbg } = req.params;
+  const { Godine_Iskustva, Satnica } = req.body;
+
+  const sql = "UPDATE radnici SET Godine_Iskustva=?, Satnica=? WHERE JMBG=?";
+  db.query(sql, [Godine_Iskustva, Satnica, jmbg], (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json({ message: "Radnik ažuriran" });
+  });
+};

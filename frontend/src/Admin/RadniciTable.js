@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
+import EditRadnikPopup from "./EditRadnikPopup";
 
 const RadniciTable = () => {
   const [automehanicari, setAutomehanicari] = useState([]);
   const [elektricari, setElektricari] = useState([]);
+  const [selectedRadnik, setSelectedRadnik] = useState(null);
 
-  useEffect(() => {
-    fetch("http://localhost:8081/radnici/automehanicari")
-      .then((res) => res.json())
-      .then(setAutomehanicari);
-
-    fetch("http://localhost:8081/radnici/elektricari")
-      .then((res) => res.json())
-      .then(setElektricari);
-  }, []);
-
-  const handleSave = () => {
-    // nakon dodavanja refresujemo podatke
+  const fetchData = () => {
     fetch("http://localhost:8081/radnici/automehanicari")
       .then((res) => res.json())
       .then(setAutomehanicari);
@@ -24,6 +15,10 @@ const RadniciTable = () => {
       .then((res) => res.json())
       .then(setElektricari);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -38,6 +33,7 @@ const RadniciTable = () => {
             <th>Telefon</th>
             <th>Iskustvo</th>
             <th>Satnica</th>
+            <th>Akcije</th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +46,9 @@ const RadniciTable = () => {
               <td>{a.Broj_Telefona}</td>
               <td>{a.Godine_Iskustva}</td>
               <td>{a.Satnica}</td>
+              <td>
+                <button onClick={() => setSelectedRadnik(a)}>Izmijeni</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -66,6 +65,7 @@ const RadniciTable = () => {
             <th>Telefon</th>
             <th>Iskustvo</th>
             <th>Satnica</th>
+            <th>Akcije</th>
           </tr>
         </thead>
         <tbody>
@@ -78,10 +78,24 @@ const RadniciTable = () => {
               <td>{e.Broj_Telefona}</td>
               <td>{e.Godine_Iskustva}</td>
               <td>{e.Satnica}</td>
+              <td>
+                <button onClick={() => setSelectedRadnik(e)}>Izmijeni</button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {selectedRadnik && (
+        <EditRadnikPopup
+          radnik={selectedRadnik}
+          onClose={() => setSelectedRadnik(null)}
+          onSaved={() => {
+            fetchData();
+            setSelectedRadnik(null);
+          }}
+        />
+      )}
     </div>
   );
 };
