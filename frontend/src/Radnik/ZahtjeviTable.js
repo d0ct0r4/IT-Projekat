@@ -90,7 +90,6 @@ const ZahtjeviTable = ({ user }) => {
               <th>Datum Slanja</th>
               <th>Status</th>
               <th>Opis</th>
-              <th>Akcije</th>
             </tr>
           </thead>
           <tbody>
@@ -98,10 +97,10 @@ const ZahtjeviTable = ({ user }) => {
               <tr key={idx}>
                 <td>{z.ID}</td>
                 <td>{z.musterija_ID}</td>
-                <td>{z.radnik_jmbg}</td>
+                <td>{z.radnik_JMBG}</td>
                 <td>{z.VIN}</td>
                 <td>{z.popravka_ID}</td>
-                <td>{z.datum_slanja}</td>
+                <td>{z.poslan_datum}</td>
                 <td>
                   {z.preuzet === 0
                     ? "Nije preuzeto"
@@ -109,7 +108,7 @@ const ZahtjeviTable = ({ user }) => {
                     ? "Preuzeto"
                     : "Završeno"}
                 </td>
-                <td>{z.opis}</td>
+                <td>{z.naziv}</td>
                 <td>
                   {z.preuzet === 0 && (
                     <button onClick={() => handlePreuzmi(z.ID, z.VIN, z.musterija_ID)}>
@@ -128,7 +127,7 @@ const ZahtjeviTable = ({ user }) => {
                               file,
                               z.musterija_ID,
                               z.popravka_ID,
-                              10, // ovdje stavi cijenu
+                              10,
                               z.ID,
                               koristeniDijelovi
                             );

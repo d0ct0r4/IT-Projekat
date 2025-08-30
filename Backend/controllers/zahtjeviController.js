@@ -1,11 +1,17 @@
 const db = require('../db');
 
 exports.getAllZahtjevi = (req, res) => {
-    db.query("SELECT * FROM zahtjevi", (err, data) =>{
-        if(err) return err;
-        res.json(data);
-    });
+  const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum, '%y-%m-%d') AS poslan_datum, preuzet, naziv FROM zahtjevi`;
+  
+  db.query(sql, (err, data) => {
+      if (err) {
+          console.error("Greška pri dohvatanju zahtjeva:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json(data);
+  });
 };
+
 
 exports.getZahtjeviByClient = (req, res) => {
     const clientId = req.params.id;
@@ -81,7 +87,7 @@ exports.deleteZahtjev = (req, res) => {
 exports.getZahtjeviByVin = (req, res) => {
     const vin = req.params.vin;
 
-    const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum,'%Y-%m-%d'), preuzet, naziv FROM zahtjevi WHERE VIN = ?`
+    const sql = `SELECT ID, musterija_ID, radnik_JMBG, VIN, popravka_ID, DATE_FORMAT(poslan_datum,'%Y-%m-%d') AS poslan_datum, preuzet, naziv FROM zahtjevi WHERE VIN = ?`
     db.query(sql, vin, (err, result) => {
       if(err) {
         console.error('Greska pri upitu:', err);

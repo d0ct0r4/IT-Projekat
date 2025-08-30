@@ -56,9 +56,12 @@ const RacunTable = ({ user }) => {
             {racuni.map((racun, idx) => (
               <React.Fragment key={idx}>
                 <tr>
-                  {Object.values(racun).map((val, i) => (
-                    <td key={i}>{val}</td>
-                  ))}
+                  <td>{racun.ID}</td>
+                  <td>{racun.Musterija_ID}</td>
+                  <td>{racun.Popravka_ID}</td>
+                  <td>{racun.Datum}</td>
+                  <td>{racun.sati}</td>
+                  <td>{racun.Cena}€</td>
                   <td>
                     <button onClick={() => toggleDjelovi(racun.ID)}>
                       {expandedRacun === racun.ID ? '↑' : '↓'}
@@ -72,17 +75,19 @@ const RacunTable = ({ user }) => {
                         <table>
                           <thead>
                             <tr>
-                              {Object.keys(racunDjelovi[racun.ID][0]).map((key) => (
-                                <th key={key}>{key}</th>
-                              ))}
+                              <th>ID Racuna</th>
+                              <th>Ime Dijela</th>
+                              <th>Kolicina</th>
+                              <th>Cijena</th>
                             </tr>
                           </thead>
                           <tbody>
                             {racunDjelovi[racun.ID].map((dio, i) => (
                               <tr key={i}>
-                                {Object.values(dio).map((val, j) => (
-                                  <td key={j}>{val}</td>
-                                ))}
+                                <td>{dio.RacunID}</td>
+                                <td>{dio.DioNaziv}</td>
+                                <td>{dio.Kolicina}</td>
+                                <td>{dio.Cijena}€</td>
                               </tr>
                             ))}
                           </tbody>

@@ -8,9 +8,9 @@ const EditRadnikPopup = ({ radnik, onClose, onSaved }) => {
     e.preventDefault();
 
     await fetch(`http://localhost:8081/radnici/update/${radnik.JMBG}`, {
-      method: "PUT",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ Godine_Iskustva: iskustvo, Satnica: satnica }),
+      body: JSON.stringify({ Godine_Iskustva: iskustvo, Satnica: satnica}),
     });
 
     onSaved();

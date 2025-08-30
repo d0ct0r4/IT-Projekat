@@ -219,7 +219,7 @@ const AutaTable = ({ user }) => {
                                       {p.slika != null ?(
                                       <span
                                       style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-                                      onClick={() => setPopupSlika(`http://localhost:8081/${p.slika}`)}
+                                      onClick={() => setPopupSlika(`http://localhost:8081${p.slika}`)}
                                     >
                                       Vidi sliku
                                     </span>) : <p>Nema slike</p>

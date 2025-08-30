@@ -121,30 +121,50 @@ exports.deleteRadnik = (req, res) => {
 // 5. Update satnice i godina iskustva
 exports.updateRadnik = (req, res) => {
   const { jmbg } = req.params;
-  const { Godine_Iskustva, Satnica, tip } = req.body;
-
-  const sql =
-    tip === "automehanicar"
-      ? "UPDATE automehanicar SET Godine_Iskustva = ?, Satnica = ? WHERE JMBG_Radnik = ?"
-      : "UPDATE elektricar SET Godine_Iskustva = ?, Satnica = ? WHERE JMBG_Radnik = ?";
-
-  db.query(sql, [Godine_Iskustva, Satnica, jmbg], (err) => {
-    if (err) {
-      console.error("Greška pri ažuriranju radnika:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
-    res.json({ message: "Radnik uspješno ažuriran" });
-  });
-};
-
-// controllers/radniciController.js
-exports.updateRadnik = (req, res) => {
-  const { jmbg } = req.params;
   const { Godine_Iskustva, Satnica } = req.body;
 
-  const sql = "UPDATE radnici SET Godine_Iskustva=?, Satnica=? WHERE JMBG=?";
-  db.query(sql, [Godine_Iskustva, Satnica, jmbg], (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: "Radnik ažuriran" });
+  const sql1 = `SELECT * FROM automehanicar WHERE JMBG_Radnik = ?`;
+  const sql2 = `SELECT * FROM elektricar WHERE JMBG_Radnik = ?`;
+
+  // prvo provjeri da li je automehaničar
+  db.query(sql1, [jmbg], (err1, result1) => {
+    if (err1) {
+      console.error("Greška pri provjeri automehaničara:", err1);
+      return res.status(500).json({ error: "Database error kod provjere automehaničara" });
+    }
+
+    if (result1.length > 0) {
+      // našli smo ga u automehaničar tabeli
+      const updateSql = `UPDATE automehanicar SET Godine_Iskustva = ?, Satnica = ? WHERE JMBG_Radnik = ?`;
+      db.query(updateSql, [Godine_Iskustva, Satnica, jmbg], (errUpdate) => {
+        if (errUpdate) {
+          console.error("Greška pri update-u automehaničara:", errUpdate);
+          return res.status(500).json({ error: "Database error kod update-a automehaničara" });
+        }
+        return res.json({ message: "Automehaničar uspješno ažuriran" });
+      });
+    } else {
+      // ako nije u automehaničar, probaj električar
+      db.query(sql2, [jmbg], (err2, result2) => {
+        if (err2) {
+          console.error("Greška pri provjeri električara:", err2);
+          return res.status(500).json({ error: "Database error kod provjere električara" });
+        }
+
+        if (result2.length > 0) {
+          const updateSql = `UPDATE elektricar SET Godine_Iskustva = ?, Satnica = ? WHERE JMBG_Radnik = ?`;
+          db.query(updateSql, [Godine_Iskustva, Satnica, jmbg], (errUpdate) => {
+            if (errUpdate) {
+              console.error("Greška pri update-u električara:", errUpdate);
+              return res.status(500).json({ error: "Database error kod update-a električara" });
+            }
+            return res.json({ message: "Električar uspješno ažuriran" });
+          });
+        } else {
+          // nije pronađen ni u jednoj tabeli
+          return res.status(404).json({ error: "Radnik nije pronađen" });
+        }
+      });
+    }
   });
 };

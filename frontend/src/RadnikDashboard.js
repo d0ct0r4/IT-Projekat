@@ -11,7 +11,7 @@ const RadnikDashboard = ({ user }) => {
   const renderTable = () => {
     switch (selectedTable) {
       case 'auta':
-        return <AutaTable/>;
+        return <AutaTable user={user}/>;
       case 'musterija':
         return <MusterijaTable user={user}/>
       case 'popravke':
