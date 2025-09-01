@@ -1,0 +1,269 @@
+/* Dark baza + varijable */
+:root {
+    --bg: #0d0f14;
+    --surface: #151a24;
+    --surface-2: #1b2230;
+    --text: #e6e7eb;
+    --muted: #a6afbd;
+    --border: #2a3343;
+  
+    /* Akcent će prepisati role-klasa ispod */
+    --accent: #66d9ff;
+    --accent-contrast: #061018;
+  
+    --danger: #ef4444;
+    --warn: #f59e0b;
+    --ok: #22c55e;
+    --focus: 0 0 0 3px rgba(102, 217, 255, 0.35);
+  }
+  
+  /* Akcent po ulozi */
+  .theme-worker { --accent: #66d9ff; --accent-contrast: #07141a; }   /* radnik */
+  .theme-client { --accent: #7c5cff; --accent-contrast: #0e0b1a; }   /* klijent */
+  .theme-admin  { --accent: #22d3ee; --accent-contrast: #061419; }   /* admin  */
+  
+  /* Osnova stranice */
+  html, body, #root { height: 100%; }
+  body {
+    background: radial-gradient(1200px 800px at 10% -10%, #111623 0%, var(--bg) 40%) fixed,
+                radial-gradient(800px 600px at 110% 10%, #0f1420 0%, transparent 70%) fixed,
+                var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Naslovi i paragrafi */
+  h1,h2,h3,h4 { color: var(--text); margin: 0.2rem 0 0.8rem; }
+  p { color: var(--muted); }
+  
+  /* Linkovi */
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  
+  /* Kartice / sekcije (ako dodaš .card oko sadržaja) */
+  .card {
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+  
+  /* Tabele – pogađa sve <table> u appu */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  thead th {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: .02em;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+  }
+  tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  tbody tr:hover {
+    background: rgba(255,255,255,0.03);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  
+  /* Dugmad – pogađa sva <button> */
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .08s ease, box-shadow .18s ease, opacity .2s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  }
+  button:hover { transform: translateY(-1px); }
+  button:active { transform: translateY(0); opacity: .9; }
+  button:focus-visible { outline: none; box-shadow: var(--focus); }
+  
+  /* Varijante (dodaj klasu gdje želiš) */
+  .btn-secondary { background: #2a3343; color: var(--text); }
+  .btn-danger { background: var(--danger); }
+  .btn-warn { background: var(--warn); color: #101010; }
+  .btn-ok { background: var(--ok); }
+  
+  /* Inputi i selecti – pogađa sve */
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  input[type="file"],
+  select, textarea {
+    background: #0f131c;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    outline: none;
+    width: auto;
+  }
+  input::placeholder, textarea::placeholder { color: #8a93a6; }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: var(--focus);
+  }
+  
+  /* Redovi alata iznad tabela (filter/search) */
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 10px 0 16px;
+  }
+  .controls > * { flex: 0 0 auto; }
+  .controls .spacer { flex: 1 1 auto; }
+  
+  /* Badge/oznaka (ako poželiš dodati) */
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    background: #121826;
+    color: var(--text);
+  }
+  .badge.ok { border-color: #194d34; background: #102219; color: #8ee6b0; }
+  .badge.warn { border-color: #5a3d12; background: #22180c; color: #ffd089; }
+  .badge.danger { border-color: #5a1b1b; background: #1c0e0e; color: #ff9a9a; }
+  
+  /* Dropdown strelice (dugme koje mijenja ↑/↓) */
+  button.toggle {
+    padding: 6px 10px;
+    background: #232a3a;
+  }
+  
+  /* Slike u modalima */
+  img {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Scrollbar (WebKit) */
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-track { background: #0e121a; }
+  *::-webkit-scrollbar-thumb { background: #2a3343; border-radius: 8px; }
+  *::-webkit-scrollbar-thumb:hover { background: #364158; }
+  
+  /* Modal overlay + kartica
+     Napomena: inline style u postojećim popupovima forsira boje,
+     pa dodaj klase iz “Korak 2” ispod da CSS preuzme kontrolu. */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 10, 18, 0.68);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  .modal-card {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 14px;
+    padding: 18px;
+    min-width: 320px;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .modal-close {
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    line-height: 1;
+  }
+  
+  /* Tabela unutar expand reda (child-table) */
+  td > table {
+    background: #0f131c;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  td > table thead th { background: #131a27; }
+  td > table tbody tr:hover { background: rgba(255,255,255,0.04); }
+  
+  /* Utility */
+  .mt-10 { margin-top: 10px; }
+  .mt-20 { margin-top: 20px; }
+  
+  /* Ako korisnik ima sistemski dark, dodatno pojačaj kontrast */
+  @media (prefers-color-scheme: dark) {
+    :root { --text: #eef0f4; }
+  }
+  
+  /* Centriranje auth stranica (login/register) */
+.auth-wrapper{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;        /* malo “air”-a na malim ekranima */
+  }
+  .auth-card{
+    width: 100%;
+    max-width: 420px;     /* fino na desktopu, stane na mobilnom */
+  }
+  .auth-card h2{ 
+    text-align: center; 
+    margin-bottom: 12px; 
+  }
+  .auth-card input,
+  .auth-card button{
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .auth-msg{ 
+    margin-top: 10px; 
+    text-align: center; 
+    color: var(--muted);
+  }
+  
+  .auth-msg button {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .auth-msg button:hover {
+    text-decoration: underline;
+  }
+
+  .table-responsive { overflow-x: auto; }

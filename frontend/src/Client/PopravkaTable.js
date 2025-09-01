@@ -18,6 +18,7 @@ const PopravkaTable = ({ user }) => {
     <div>
       <h2>Moje Popravke</h2>
       {popravke.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -54,6 +55,7 @@ const PopravkaTable = ({ user }) => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nemate popravke.</p>
       )}

@@ -40,6 +40,7 @@ const RacunTable = ({ user }) => {
     <div>
       <h2>Moji Racuni</h2>
       {racuni.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -102,6 +103,7 @@ const RacunTable = ({ user }) => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nemate racune.</p>
       )}

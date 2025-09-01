@@ -79,6 +79,7 @@ const ZahtjeviTable = ({ user }) => {
     <div>
       <h2>Moja Vozila</h2>
       {zahtjevi.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -141,6 +142,7 @@ const ZahtjeviTable = ({ user }) => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nemate zahtjeve.</p>
       )}

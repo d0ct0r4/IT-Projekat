@@ -50,6 +50,7 @@ const DostavaTable = () => {
       </div>
 
       {dostave.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -95,6 +96,7 @@ const DostavaTable = () => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nema dostava.</p>
       )}

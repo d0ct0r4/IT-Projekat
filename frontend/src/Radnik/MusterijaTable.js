@@ -101,7 +101,8 @@ const MusterijeTable = ({user}) => {
         <div>
             <h2>Sve musterije</h2>
             {musterije.length > 0 ? (
-                <table cellPadding="5" style={{borderCollapse: 'collapse'}}>
+                <div className="table-responsive">
+                <table>
                     <thead>
                         <tr>
                            <th>ID</th>
@@ -186,6 +187,7 @@ const MusterijeTable = ({user}) => {
                         ))}
                     </tbody>
                 </table>
+                </div>
             ) : (
                 <p>Nema musterija.</p>
             )}

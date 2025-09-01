@@ -32,48 +32,22 @@ const RegistracijaPopUp = ({ onClose, onSubmit }) => {
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        top: 0, left: 0,
-        width: '100vw', height: '100vh',
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-      }}
+      className='modal-overlay'
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{
-          background: '#fff',
-          padding: '20px',
-          borderRadius: '10px',
-          minWidth: '400px',
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          position: 'relative',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
-        }}
+        className='modal-card'
       >
         {/* X dugme gore desno */}
         <button
           onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            border: 'none',
-            background: 'transparent',
-            fontSize: '20px',
-            cursor: 'pointer',
-          }}
+          className='modal-close'
         >
           ✖
         </button>
 
-        <h2 style={{ textAlign: 'center', marginBottom: '15px' }}>
+        <h2 className='modal-title'>
           Registracija korisnika
         </h2>
 

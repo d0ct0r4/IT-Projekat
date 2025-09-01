@@ -18,58 +18,23 @@ const EditRadnikPopup = ({ radnik, onClose, onSaved }) => {
 
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0,0,0,0.3)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-      }}
+      className="modal-overlay"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "#fff",
-          padding: "30px 25px",
-          borderRadius: "15px",
-          minWidth: "400px",
-          maxWidth: "500px",
-          maxHeight: "90vh",
-          overflowY: "auto",
-          boxShadow: "0 8px 25px rgba(0,0,0,0.25)",
-          position: "relative",
-        }}
+        className="modal-card"
       >
         {/* X dugme */}
         <button
           onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "15px",
-            border: "none",
-            background: "transparent",
-            fontSize: "22px",
-            cursor: "pointer",
-            color: "#888",
-          }}
+          className="modal-close"
         >
           ✖
         </button>
 
         <h2
-          style={{
-            textAlign: "center",
-            marginBottom: "20px",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-          }}
+          className="modal-title"
         >
           Izmijeni radnika
         </h2>

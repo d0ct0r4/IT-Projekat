@@ -58,6 +58,7 @@ const DijeloviTable = () => {
       <button onClick={() => setShowPopup(true)}>Dodaj dio</button>
 
       {dijelovi.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -83,6 +84,7 @@ const DijeloviTable = () => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nema dijelova.</p>
       )}

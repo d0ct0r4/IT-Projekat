@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Login({ onLogin }) {
+function Login({ onLogin, onSwitch }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [msg, setMsg] = useState('');
@@ -26,7 +26,8 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div>
+    <div className="auth-wrapper">
+      <div className='card auth-card'>
       <h2>Login</h2>
       <input
         type="text"
@@ -41,7 +42,12 @@ function Login({ onLogin }) {
         onChange={(e) => setPassword(e.target.value)}
       /><br />
       <button onClick={handleLogin}>Login</button>
-      <p>{msg}</p>
+      <p className="auth-msg">
+          Nemate nalog?{' '}
+          <button className="btn-secondary" onClick={onSwitch}>Registrujte se</button>
+        </p>
+      <p className='auth-msg'>{msg}</p>
+      </div>
     </div>
   );
 }

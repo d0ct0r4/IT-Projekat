@@ -23,7 +23,7 @@ const ClientDashboard = ({ user }) => {
   };
 
   return (
-    <div>
+    <div className='theme-client'>
       <h2>Pregled podataka</h2>
 
       <select value={selectedTable} onChange={(e) => setSelectedTable(e.target.value)}>

@@ -124,6 +124,7 @@ const AutaTable = ({ user }) => {
     <div>
         <h2>Moja Vozila</h2>
         {auta.length > 0 ? (
+        <div className="table-responsive">
         <table>
             <thead>
             <tr>
@@ -297,6 +298,7 @@ const AutaTable = ({ user }) => {
               ))}
             </tbody>
         </table>
+        </div>
       ) : (
         <div>
             <p>Nemate auta.</p>

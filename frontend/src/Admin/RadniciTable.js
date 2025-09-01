@@ -23,6 +23,7 @@ const RadniciTable = () => {
   return (
     <div>
       <h2 className="text-lg font-bold">Automehaničari</h2>
+      <div className="table-responsive">
       <table className="border w-full mb-6">
         <thead>
           <tr>
@@ -85,6 +86,7 @@ const RadniciTable = () => {
           ))}
         </tbody>
       </table>
+      </div>
 
       {selectedRadnik && (
         <EditRadnikPopup

@@ -193,6 +193,7 @@ const showZahtjevi = (id) => {
       </div>
 
       {auta.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -386,6 +387,7 @@ const showZahtjevi = (id) => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nema auta.</p>
       )}

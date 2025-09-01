@@ -65,6 +65,7 @@ const KorisniciTable = () => {
       </button>
 
       {users.length > 0 ? (
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -95,6 +96,7 @@ const KorisniciTable = () => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p>Nema korisnika.</p>
       )}
